@@ -11,7 +11,7 @@ public GameObject Tile;
 	//Instantiate according to size	
 	void DrawMap(int mapHor, int mapVer){
 		GameObject[,] tileMap;
-		tileMap = new GameObject*[mapHor,mapVer];
+		tileMap = new GameObject[mapHor,mapVer];
 		//Initiate position vector
 		Vector3 positionVector = new Vector3(0,0,0);
 			//Start from half of mapVer in order to center the camera
@@ -20,8 +20,7 @@ public GameObject Tile;
 				for(float x=-mapHor/2; x<mapHor/2; x++){
 					positionVector = new Vector3(x,y,0);
 					//Rotate -90 degrees Euler for tiles to face the camera
-					GameObject* tempPointer;
-					tempPointer = &Instantiate(Tile,positionVector,Quaternion.Euler(-90,0,0));
+					Instantiate(Tile,positionVector,Quaternion.Euler(-90,0,0));
 					
 				}
 			}
