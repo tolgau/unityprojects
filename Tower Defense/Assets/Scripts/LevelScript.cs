@@ -4,12 +4,15 @@ using System.Collections.Generic;
 
 public class LevelScript : MonoBehaviour {
 public GameObject Tile;
+//Generic list the tiles are held in
 private List<GameObject> tileMap = new List<GameObject>();
 	
 	public void RegisterTile(GameObject tile){
+		//Add tile to the list
 		tileMap.Add(tile);
 	}
 	
+	//Return the tile object instance at the specified horizontal and vertical values
 	public GameObject GetTile(float mapHor, float mapVer){
         GameObject result = tileMap.Find(
         delegate(GameObject tile)
@@ -21,7 +24,7 @@ private List<GameObject> tileMap = new List<GameObject>();
 	}
 	// Use this for initialization
 	void Start () {
-		DrawMap(32,18);
+		DrawMap(10,10);
 	
 	}
 	
