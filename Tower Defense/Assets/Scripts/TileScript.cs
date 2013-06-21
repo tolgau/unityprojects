@@ -3,6 +3,7 @@ using System.Collections;
 
 public class TileScript : MonoBehaviour {
 private LevelScript levelScript;
+
 	
 	// Use this for initialization
 	void Start () {

@@ -1,17 +1,19 @@
 using UnityEngine;
 using System.Collections;
 
-public class EnemyScript : MonoBehaviour {
-private LevelScript levelScript;
+public abstract class EnemyScript : MonoBehaviour {
+protected LevelScript levelScript;
+protected float speed;
+protected float hitPoints;
 	
 	// Use this for initialization
-	void Start () {
+	protected virtual void Start () {
 		//Get LevelScript instance
 		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();		
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	protected virtual void Update () {
 		//Move according to axis information taken from keyboard
 		transform.Translate(new Vector3(-Input.GetAxis("Horizontal")*Time.deltaTime*2,0,0));
 		transform.Translate(new Vector3(0,-Input.GetAxis("Vertical")*Time.deltaTime*2,0));

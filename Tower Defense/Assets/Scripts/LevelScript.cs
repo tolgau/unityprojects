@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class LevelScript : MonoBehaviour {
 public GameObject Tile;
+public GameObject Frog;
 //Generic list the tiles are held in
 private List<GameObject> tileMap = new List<GameObject>();
 	
@@ -25,7 +26,7 @@ private List<GameObject> tileMap = new List<GameObject>();
 	// Use this for initialization
 	void Start () {
 		DrawMap(10,10);
-	
+		Instantiate(Frog,new Vector3(0,0,-0.5f),Quaternion.Euler(0,0,180));
 	}
 	
 	//Instantiate according to size	
