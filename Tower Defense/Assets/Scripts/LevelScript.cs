@@ -1,17 +1,32 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class LevelScript : MonoBehaviour {
 public GameObject Tile;
+private List<GameObject> tileMap = new List<GameObject>();
+	
+	public void RegisterTile(GameObject tile){
+		tileMap.Add(tile);
+	}
+	
+	public GameObject GetTile(float mapHor, float mapVer){
+        GameObject result = tileMap.Find(
+        delegate(GameObject tile)
+        {
+            return tile.transform.position.x == mapHor && tile.transform.position.y == mapVer;
+        }
+        );
+		return result;
+	}
 	// Use this for initialization
 	void Start () {
-		DrawMap(10,10);
+		DrawMap(32,18);
 	
 	}
+	
 	//Instantiate according to size	
 	void DrawMap(int mapHor, int mapVer){
-		GameObject[,] tileMap;
-		tileMap = new GameObject[mapHor,mapVer];
 		//Initiate position vector
 		Vector3 positionVector = new Vector3(0,0,0);
 			//Start from half of mapVer in order to center the camera
@@ -21,7 +36,6 @@ public GameObject Tile;
 					positionVector = new Vector3(x,y,0);
 					//Rotate -90 degrees Euler for tiles to face the camera
 					Instantiate(Tile,positionVector,Quaternion.Euler(-90,0,0));
-					
 				}
 			}
 		
@@ -31,4 +45,5 @@ public GameObject Tile;
 	void Update () {
 	
 	}
+	
 }
