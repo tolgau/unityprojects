@@ -9,7 +9,8 @@ protected float hitPoints;
 	// Use this for initialization
 	protected virtual void Start () {
 		//Get LevelScript instance
-		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();		
+		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
+		transform.position = new Vector3(0,0,0);
 	}
 	
 	// Update is called once per frame
@@ -17,6 +18,9 @@ protected float hitPoints;
 		//Move according to axis information taken from keyboard
 		transform.Translate(new Vector3(-Input.GetAxis("Horizontal")*Time.deltaTime*2,0,0));
 		transform.Translate(new Vector3(0,-Input.GetAxis("Vertical")*Time.deltaTime*2,0));
+		
+		//Vector3 newPosition = new Vector3(transform.position.x+1, transform.position.y, transform.position.z);
+		//transform.position = Vector3.Lerp(transform.position,newPosition,Time.deltaTime*2);
 		
 		//For debug purposes. Get the tile the frog is sitting on and print out the coordinates everytime space is pressed
 		if(Input.GetButtonDown("Jump")){
