@@ -1,8 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
-public class TileScript : MonoBehaviour {
-
+public class WallScript : MonoBehaviour {
+	
 	private LevelScript levelScript;
 	
 	// Use this for initialization
@@ -10,7 +10,7 @@ public class TileScript : MonoBehaviour {
 		//Get LevelScript instance
 		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
 		//Put the tile in generic list
-		levelScript.RegisterTile(this.gameObject);
+		levelScript.RegisterWall(this.gameObject);
 	}
 	
 	// Update is called once per frame
