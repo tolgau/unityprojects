@@ -1,20 +1,16 @@
 using UnityEngine;
 using System.Collections;
 
-public class WallScript : MonoBehaviour {
-	
-	private LevelScript levelScript;
-	
+public class WallScript : TileBaseScript {
+		
 	// Use this for initialization
-	void Start () {
-		//Get LevelScript instance
-		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
-		//Put the tile in generic list
-		levelScript.RegisterWall(this.gameObject);
+	protected override void Start () {
+		tileType = TileBaseScript.TileType.wall;
+		base.Start();
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	protected override void Update () {
+		base.Update();
 	}
 }
