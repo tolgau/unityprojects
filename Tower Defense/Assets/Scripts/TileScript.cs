@@ -8,7 +8,7 @@ public class TileScript : TileBaseScript {
 		tileType = TileBaseScript.TileType.tile;
 		base.Start();
 	}
-	
+
 	// Update is called once per frame
 	protected override void Update () {
 		base.Update();
