@@ -1,0 +1,14 @@
+TODO:
+
+1:	Walls register but cannot be found. (GetTile)
+2:	DrawObject will only draw single tile at a time. DrawObject(ObjectType prefab, Vector3 Location)
+3:	BuildMap class reads from map file and calls DrawObject as needed.
+4:	Work on map editor. Output desired C# array.
+5:	Remove seperate wall and tile scripts. Craete one script with different type values.
+6:	Create a path finder script. Finds the shortest path from entrance to exit everytime a new object is placed.
+	GetNextPath(GameObject currentTile) {return nextTile}
+7:	TowerScript will have following members:
+	Range: an array of x,y coordinates relative to object position.
+	MonitorRange(): Monitors the tiles specified in the range array.
+	Fire(): Gets the enemy object from the list in tile object in range array. Calls Damage() from enemy object.
+		Damage, Slow, Stun
