@@ -12,7 +12,7 @@ public class FrogScript : EnemyBaseScript {
 	protected override void Update () {
 		if(Input.GetKeyDown("space")){
 			GameObject currentTempTile = GetCurrentTile();
- 			Debug.Log(currentTempTile.transform.position.x + " " + currentTempTile.transform.position.y + " " + currentTempTile.GetComponent<TileScript>().GetTileType());
+ 			Debug.Log(currentTempTile.transform.position.x + " " + currentTempTile.transform.position.y + " " + currentTempTile.tag);
 		}
 		base.Update();
 	

@@ -7,6 +7,9 @@ public class LevelScript : MonoBehaviour {
 	public GameObject Tile;
 	public GameObject Frog;
 	public GameObject Wall;
+	public GameObject GateEnter;
+	public GameObject GateExit;
+	
 	//Generic list the tiles and walls are held in
 	private List<GameObject> tileMap = new List<GameObject>();
 	private Quaternion rotation = Quaternion.Euler(-90,0,0);
@@ -15,10 +18,10 @@ public class LevelScript : MonoBehaviour {
 	
 	public void RegisterTile(GameObject tile){
 		//Add tile to the list
-		Debug.Log(tile.transform.position.x + "  " + tile.transform.position.y + " " + tile.GetComponent<TileBaseScript>().tileType);
+		Debug.Log(tile.transform.position.x + "  " + tile.transform.position.y + " " + tile.tag);
 		tileMap.Add(tile);
 		var item = tileMap[tileMap.Count - 1];	
-		Debug.Log(item.transform.position.x + "  " + item.transform.position.y + " " + item.GetComponent<TileBaseScript>().tileType);
+		Debug.Log(item.transform.position.x + "  " + item.transform.position.y + " " + tile.tag);
 	}
 	
 	//Return the tile object instance at the specified horizontal and vertical values
@@ -43,18 +46,14 @@ public class LevelScript : MonoBehaviour {
 	void Start () {
 		int width = 18;
 		int height = 10;
-		startPoint = Random.Range(-(width/2-3), width/2-3);
-		endPoint = Random.Range(-(width/2-3), width/2-3);
-		DrawMap(width/2,height/2);
+		startPoint = Random.Range(-(width/2-2), width/2-2);
+		endPoint = Random.Range(-(width/2-2), width/2-2);
+		BuildMap(width/2,height/2);
 		Instantiate(Frog,new Vector3(startPoint,height/2,-0.5f),Quaternion.Euler(0,0,180));
 	}
 	
 	//Instantiate according to size	
-	void DrawMap(int mapHor, int mapVer){
-		DrawTile(mapHor, mapVer);
-	}
-	
-	void DrawTile(int mapHor, int mapVer) {
+	void BuildMap(int mapHor, int mapVer){
 		
 		//Initiate position vector
 		Vector3 positionVector = new Vector3(0,0,0);
@@ -66,19 +65,28 @@ public class LevelScript : MonoBehaviour {
 
 				positionVector = new Vector3(x,y,0);
 				
-				if(x==mapHor) {
-					Instantiate(Wall,positionVector,rotation);
-				} else if(x==-mapHor) {
-					Instantiate(Wall,positionVector,rotation);
-				} else if(y==mapVer && (x<startPoint-1 || x>startPoint+1)) {
-					Instantiate(Wall,positionVector,rotation);
-				} else if(y==-mapVer && (x<endPoint-1 || x>endPoint+1)) {
-					Instantiate(Wall,positionVector,rotation);
+				if (x==mapHor) {
+					DrawObject(Wall, positionVector);
+				} else if (x==-mapHor) {
+					DrawObject(Wall, positionVector);
+				} else if (y==mapVer && (x<startPoint || x>startPoint)) {
+					DrawObject(Wall, positionVector);
+				} else if (y==-mapVer && (x<endPoint || x>endPoint)) {
+					DrawObject(Wall, positionVector);
+				} else if (y==mapVer && (x == startPoint)){
+					DrawObject(GateEnter, positionVector);
+				} else if (y==-mapVer && (x == endPoint)) {
+					DrawObject(GateExit, positionVector);
 				} else {
-					Instantiate(Tile,positionVector,rotation);
+					DrawObject(Tile, positionVector);
 				}				
 			}
 		}
+	}
+	
+	void DrawObject(GameObject gameObject, Vector3 positionVector) {
+		
+		Instantiate(gameObject, positionVector, rotation);
 	}
 	
 	// Update is called once per frame
