@@ -40,8 +40,8 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 	protected virtual void Update ()
 	{
 		//Move according to axis information taken from keyboard
-		int startPoint = levelScript.startPoint;
-		int endPoint = levelScript.endPoint;
+		//int startPoint = levelScript.startPoint;
+		//int endPoint = levelScript.endPoint;
 		/*
 		if (transform.position.x > endPoint ) {
 			Vector3 newPosition = new Vector3(transform.position.x-1, transform.position.y-1 , transform.position.z);

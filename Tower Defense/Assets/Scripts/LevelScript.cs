@@ -9,6 +9,9 @@ public class LevelScript : MonoBehaviour {
 	public GameObject Wall;
 	public GameObject GateEnter;
 	public GameObject GateExit;
+	public int mapWidth;
+	public int mapHeight;
+	public PathFinderScript pathFinderScript;
 	
 	//Generic list the tiles and walls are held in
 	private List<GameObject> tileMap = new List<GameObject>();
@@ -18,10 +21,7 @@ public class LevelScript : MonoBehaviour {
 	
 	public void RegisterTile(GameObject tile){
 		//Add tile to the list
-		Debug.Log(tile.transform.position.x + "  " + tile.transform.position.y + " " + tile.tag);
 		tileMap.Add(tile);
-		var item = tileMap[tileMap.Count - 1];	
-		Debug.Log(item.transform.position.x + "  " + item.transform.position.y + " " + tile.tag);
 	}
 	
 	//Return the tile object instance at the specified horizontal and vertical values
@@ -44,12 +44,10 @@ public class LevelScript : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		int width = 18;
-		int height = 10;
-		startPoint = Random.Range(-(width/2-2), width/2-2);
-		endPoint = Random.Range(-(width/2-2), width/2-2);
-		BuildMap(width/2,height/2);
-		Instantiate(Frog,new Vector3(startPoint,height/2,-0.5f),Quaternion.Euler(0,0,180));
+		startPoint = Random.Range(-(mapWidth/2-2), mapWidth/2-2);
+		endPoint = Random.Range(-(mapWidth/2-2), mapWidth/2-2);
+		BuildMap(mapWidth/2,mapHeight/2);
+		Instantiate(Frog,new Vector3(startPoint,mapHeight/2,-0.5f),Quaternion.Euler(0,0,180));
 	}
 	
 	//Instantiate according to size	
