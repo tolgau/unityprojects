@@ -48,6 +48,7 @@
      <Compile Include="Assets\Scripts\FrogScript.cs" />
      <Compile Include="Assets\Scripts\LevelScript.cs" />
      <Compile Include="Assets\Scripts\PathFinderScript.cs" />
+     <Compile Include="Assets\Scripts\PathNode.cs" />
      <Compile Include="Assets\Scripts\TileScript.cs" />
      <Compile Include="Assets\Scripts\TowerScript.cs" />
   </ItemGroup>

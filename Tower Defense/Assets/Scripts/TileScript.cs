@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class TileScript : MonoBehaviour {
-protected LevelScript levelScript;
-protected List<GameObject> tileOccupants = new List<GameObject>();
+	
+	protected PathFinderScript pathFinderScript;
+	protected LevelScript levelScript;
+	protected List<GameObject> tileOccupants = new List<GameObject>();
 
 	public void RegisterTileOccupant(GameObject gameObject){
 		//Add tile to the list
@@ -20,7 +22,9 @@ protected List<GameObject> tileOccupants = new List<GameObject>();
 		//Get LevelScript instance
 		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
 		//Put the tile in generic list
+		pathFinderScript = GameObject.Find("PathFinder(Clone)").GetComponent<PathFinderScript>();
 		levelScript.RegisterTile(this.gameObject);
+		pathFinderScript.RegisterAsNode(this.gameObject);
 	}
 	
 	// Update is called once per frame

@@ -12,8 +12,7 @@ public class LevelScript : MonoBehaviour {
 	public GameObject PathFinder;
 	public int mapWidth;
 	public int mapHeight;
-	
-	
+	public PathFinderScript pathFinderScript;
 	//Generic list the tiles and walls are held in
 	private List<GameObject> tileMap = new List<GameObject>();
 	private Quaternion rotation = Quaternion.Euler(-90,0,0);
@@ -54,6 +53,7 @@ public class LevelScript : MonoBehaviour {
 		BuildMap(mapWidth/2,mapHeight/2);
 		Instantiate(Frog,new Vector3(startPoint,mapHeight/2,-0.5f),Quaternion.Euler(0,0,180));
 		GameObject pathFinder = (GameObject)Instantiate(PathFinder);
+		pathFinderScript = pathFinder.GetComponent<PathFinderScript>();
 	}
 	
 	//Instantiate according to size	
