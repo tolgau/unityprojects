@@ -11,7 +11,8 @@ public class PathFinderScript : MonoBehaviour {
 	public Material red;
 	// Use this for initialization
 	void Start () {
-		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();	
+		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
+		PrintNodeList();	
 		FindShortestPathBetweenGates();
 	}
 	
@@ -22,16 +23,17 @@ public class PathFinderScript : MonoBehaviour {
 	
 	public void PrintNodeList(){
 		foreach(PathNode node in allNodes){
-			Debug.Log(node.nodePosition);
+			//Debug.Log(node.nodePosition);
 		}
 	}
 	
-	public PathNode RegisterAsNode(GameObject gameObject){
+	public void RegisterAsNode(GameObject gameObject){
 		PathNode node = new PathNode();
 		node.nodePosition = gameObject.transform.position;
 		node.associatedObject = gameObject;
+		RegisterNode(node);
 		//TODO Switch statement which looks at an object's tag or attribute and decides for a handicap value to be used in F calculation.
-		return node;
+		//return node;
 	}
 	
 	public void FindShortestPathBetweenGates(){
@@ -49,90 +51,96 @@ public class PathFinderScript : MonoBehaviour {
 	}
 	
 	void FindShortestPathBetween(PathNode start, PathNode end){		
-		bool isClosedList=false, isOpenList=false;
-		openList.Add (start);
-		//closedList.Add (start);
-		CalculateF(start, end, openList);
 		
-		//while(closedList[closedList.Count - 1].nodePosition != end.nodePosition) {
+		bool isClosedList=false, isOpenList=false;
+		PathNode nodeWithLowestCost;
 			
-			PathNode nodeWithLowestFValue = FindLowestFValue(openList); 
-			if (nodeWithLowestFValue == end) {
+		openList.Add (start);
+		CalculateCost(start, end, openList);
+		
+		do {
+			nodeWithLowestCost = FindLowestCost(openList); 
+						
+			if (nodeWithLowestCost == end) {
 				// this node is the goal then we're done
-			} else {
-				closedList.Add (nodeWithLowestFValue);
-				openList.Remove (nodeWithLowestFValue);
+			} else {				
+				closedList.Add (nodeWithLowestCost);
+				openList.Remove (nodeWithLowestCost);
 			
 				List<PathNode> neighborNodesList = new List<PathNode>();
-				PathNode neighborNode1 = new PathNode();
-				neighborNode1.nodePosition = nodeWithLowestFValue.nodePosition;
-				
-				neighborNode1.nodePosition.x = nodeWithLowestFValue.nodePosition.x+1;
-				neighborNodesList.Add (neighborNode1);
-			
-				PathNode neighborNode2 = new PathNode();
-				neighborNode2.nodePosition = nodeWithLowestFValue.nodePosition;
-				neighborNode2.nodePosition.x = nodeWithLowestFValue.nodePosition.x-1;
-				neighborNodesList.Add (neighborNode2);
-			
-				PathNode neighborNode3 = new PathNode();
-				neighborNode3.nodePosition = nodeWithLowestFValue.nodePosition;
-				neighborNode3.nodePosition.y = nodeWithLowestFValue.nodePosition.y+1;
-				neighborNodesList.Add (neighborNode3);
-			
-				PathNode neighborNode4 = new PathNode();
-				neighborNode4.nodePosition = nodeWithLowestFValue.nodePosition;
-				neighborNode4.nodePosition.y = nodeWithLowestFValue.nodePosition.y-1;
-				neighborNodesList.Add (neighborNode4);				
+				FindNeighborNodes(nodeWithLowestCost, neighborNodesList);			
 
 				foreach (PathNode neighbor in neighborNodesList) {
+					
+					isClosedList = false;
+					isOpenList = false;
+										
 					foreach (PathNode node in openList) {
 						if (node.nodePosition == neighbor.nodePosition) {
-							isOpenList = true;
+							isOpenList |= true;
 						} else {
-							isOpenList = false;
+							isOpenList |= false;
 						}
 					}
 				
 					foreach (PathNode node in closedList) {
 						if (node.nodePosition == neighbor.nodePosition) {
-							isClosedList = true;
+							isClosedList |= true;
 						} else {
-							isClosedList = false;
+							isClosedList |= false;
 						}
 					}
-				
 
-	            	if (isClosedList && (nodeWithLowestFValue.nodeG < neighbor.nodeG)) {
+	            	if (isClosedList && (nodeWithLowestCost.nodeG > neighbor.nodeG)) {
+						continue;
 				//		update the neighbor with the new, lower, g value 
 				//		change the neighbor's parent to our current node
 					}
-					else if (isOpenList && (nodeWithLowestFValue.nodeG < neighbor.nodeG)) {
+					else if (isOpenList && (nodeWithLowestCost.nodeG > neighbor.nodeG)) {
+						continue;
 				//		update the neighbor with the new, lower, g value 
 				//		change the neighbor's parent to our current node
 					}
 					else if ( !isClosedList && !isOpenList) {
 						openList.Add (neighbor);
-						CalculateF(start, end, openList);
+						CalculateCost(start, end, openList);
 					}
 				}
 				
 			}
-		//}
+		} while(closedList[closedList.Count - 1].nodePosition != end.nodePosition);
 	}
 	
-	void CalculateF(PathNode start, PathNode end, List<PathNode> openList) {
-		
+	void FindNeighborNodes(PathNode activeNode, List<PathNode> neighborNodes) {
+		foreach (PathNode node in allNodes) {
+			if(activeNode.nodePosition.x+1 == node.nodePosition.x && activeNode.nodePosition.y == node.nodePosition.y)
+				neighborNodes.Add (node);
+			
+			if(activeNode.nodePosition.x-1 == node.nodePosition.x && activeNode.nodePosition.y == node.nodePosition.y)
+				neighborNodes.Add (node);
+			
+			if(activeNode.nodePosition.x == node.nodePosition.x && activeNode.nodePosition.y+1 == node.nodePosition.y)
+				neighborNodes.Add (node);
+			
+			if(activeNode.nodePosition.x == node.nodePosition.x && activeNode.nodePosition.y-1 == node.nodePosition.y)
+				neighborNodes.Add (node);
+		}
+	}
+	
+	void CalculateCost(PathNode start, PathNode end, List<PathNode> openList) {
+		// nodeG = the exact cost to reach this node from the starting node.
+		// nodeH = the estimated(heuristic) cost to reach the destination from here.
+		// nodeF = nodeG + nodeH  As the algorithm runs the F value of a node tells us how expensive we think it will be to reach our goal by way of that node.
 		foreach (PathNode node in openList) {
 			node.nodeG = Mathf.Sqrt(Mathf.Pow((start.nodePosition.x - node.nodePosition.x), 2) + Mathf.Pow((start.nodePosition.y - node.nodePosition.y), 2));
-			node.nodeH = Mathf.Sqrt(Mathf.Pow((start.nodePosition.x - node.nodePosition.x), 2) + Mathf.Pow((start.nodePosition.y - node.nodePosition.y), 2));
+			node.nodeH = Mathf.Sqrt(Mathf.Pow((end.nodePosition.x - node.nodePosition.x), 2) + Mathf.Pow((end.nodePosition.y - node.nodePosition.y), 2));
 			node.nodeF = node.nodeH + node.nodeG;
 		}
 	}
 	
-	PathNode FindLowestFValue(List<PathNode> openList) {
+	PathNode FindLowestCost(List<PathNode> openList) {
 		int lowest = 0;
-		for (int i = 1; i < openList.Count; ++i)
+		for (int i = 0; i < openList.Count; ++i)
 		{
 			if (openList[i].nodeF < openList[lowest].nodeF)
 			{
