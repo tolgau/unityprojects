@@ -9,9 +9,10 @@ public class LevelScript : MonoBehaviour {
 	public GameObject Wall;
 	public GameObject GateEnter;
 	public GameObject GateExit;
+	public GameObject PathFinder;
 	public int mapWidth;
 	public int mapHeight;
-	public PathFinderScript pathFinderScript;
+	
 	
 	//Generic list the tiles and walls are held in
 	private List<GameObject> tileMap = new List<GameObject>();
@@ -42,12 +43,17 @@ public class LevelScript : MonoBehaviour {
 		return result;
 	}
 	
+	public void ChangeTileMaterial(GameObject tile, Material material){
+		tile.renderer.material = material;		
+	}
+	
 	// Use this for initialization
 	void Start () {
 		startPoint = Random.Range(-(mapWidth/2-2), mapWidth/2-2);
 		endPoint = Random.Range(-(mapWidth/2-2), mapWidth/2-2);
 		BuildMap(mapWidth/2,mapHeight/2);
 		Instantiate(Frog,new Vector3(startPoint,mapHeight/2,-0.5f),Quaternion.Euler(0,0,180));
+		GameObject pathFinder = (GameObject)Instantiate(PathFinder);
 	}
 	
 	//Instantiate according to size	
