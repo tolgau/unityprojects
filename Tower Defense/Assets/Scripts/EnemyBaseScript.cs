@@ -1,17 +1,24 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public abstract class EnemyBaseScript : MonoBehaviour {
 	
+	protected PathFinderScript pathFinderScript;
 	protected LevelScript levelScript;
 	protected float speed;
 	protected float hitPoints;
 	protected GameObject currentTile;
+	protected List<PathNode> path;
 	// Use this for initialization
 	protected virtual void Start ()
 	{
 		//Get LevelScript instance
-		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();		
+		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
+		pathFinderScript = GameObject.Find("PathFinder(Clone)").GetComponent<PathFinderScript>();
+		path = pathFinderScript.GetPath();
+		currentTile = GetCurrentTile();
+		RegisterOccupant(currentTile);
 	}
 	
 	protected virtual float[] GetRoundedLocation(){
@@ -28,6 +35,11 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 		return currentTile;
 	}
 	
+	protected virtual void Move(){
+		Vector3 pathPosition = path[0].nodePosition;
+		this.transform.position = Vector3.Lerp(this.gameObject.transform.position, pathPosition, 0.007f);
+	}
+	
 	protected virtual bool MonitorTileChange(){
 		GameObject tempTile = currentTile;
 		GetCurrentTile();
@@ -39,24 +51,14 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 	// Update is called once per frame
 	protected virtual void Update ()
 	{
-		//Move according to axis information taken from keyboard
-		//int startPoint = levelScript.startPoint;
-		//int endPoint = levelScript.endPoint;
-		/*
-		if (transform.position.x > endPoint ) {
-			Vector3 newPosition = new Vector3(transform.position.x-1, transform.position.y-1 , transform.position.z);
-			transform.position = Vector3.Lerp(transform.position,newPosition,Time.deltaTime*2);
-		} else if (transform.position.x < endPoint ) {
-			Vector3 newPosition = new Vector3(transform.position.x+1, transform.position.y-1 , transform.position.z);
-			transform.position = Vector3.Lerp(transform.position,newPosition,Time.deltaTime*2);
-		} else {
-			Vector3 newPosition = new Vector3(transform.position.x, transform.position.y-1 , transform.position.z);
-			transform.position = Vector3.Lerp(transform.position,newPosition,Time.deltaTime*2);
+		//Move ();
+		MonitorTileChange();
+		transform.Translate (new Vector3 (-Input.GetAxis ("Horizontal") * Time.deltaTime * 5, 0, 0));
+		transform.Translate (new Vector3 (0, -Input.GetAxis ("Vertical") * Time.deltaTime * 5, 0));
+		if(Input.GetKeyDown("space")){
+			GameObject currentTempTile = GetCurrentTile();
+ 			Debug.Log(currentTempTile.transform.position.x + " " + currentTempTile.transform.position.y + " " + currentTempTile.tag);
 		}
-		*/
-		transform.Translate (new Vector3 (-Input.GetAxis ("Horizontal") * Time.deltaTime * 2, 0, 0));
-		transform.Translate (new Vector3 (0, -Input.GetAxis ("Vertical") * Time.deltaTime * 2, 0));
-		
 	}
 	
 	protected virtual bool Registrar(GameObject tileEntered, GameObject tileLeft){

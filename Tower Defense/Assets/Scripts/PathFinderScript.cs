@@ -22,17 +22,20 @@ public class PathFinderScript : MonoBehaviour {
 		//Add node to the list
 		allNodes.Add(node);
 	}
-	
-	public void PrintNodeList(){
-		foreach(PathNode node in allNodes){
-			Debug.Log(node.nodePosition);
-		}
+		
+	public List<PathNode> GetPath(){
+		//Debug.Log(enemyPath.Count);
+		return enemyPath;
 	}
 	
 	public void RegisterAsNode(GameObject gameObject){
 		PathNode node = new PathNode();
 		node.nodePosition = gameObject.transform.position;
-		node.associatedObject = gameObject;
+		if (gameObject.tag != "Tile"){
+			node.nodeHandicap = 1000;
+		} else {
+			node.nodeHandicap = 0;
+		}
 		RegisterNode(node);
 		//TODO Switch statement which looks at an object's tag or attribute and decides for a handicap value to be used in F calculation.
 		//return node;
@@ -45,22 +48,24 @@ public class PathFinderScript : MonoBehaviour {
 		PathNode end = new PathNode();
 		start.nodePosition = gateEnter[0].transform.position;
 		start.nodePosition.y--;
+		start.nodePosition.z = 0f;
 		end.nodePosition = gateExit[0].transform.position;
 		end.nodePosition.y++;
-		FindShortestPathBetween(start, end);
-		//PaintOpenListNodes();
-		//PaintClosedListNodes();
-		PaintPathList();
+		end.nodePosition.z = 0f;
+		FindShortestPathBetweenNodes(start, end);
+		PaintList(closedList, red);
+		PaintList(openList, blue);
+		PaintList(enemyPath, green);
 	}
 	
-	void FindShortestPathBetween(PathNode start, PathNode end){		
+	void FindShortestPathBetweenNodes(PathNode start, PathNode end){		
 		
-		bool isClosedList=false, isOpenList=false;
+		bool isInClosedList=false, isInOpenList=false;
 		float tentative_GScore;
 		PathNode nodeWithLowestCost;
 			
 		openList.Add (start);
-		enemyPath.Add (start);
+		enemyPath.Add (end);
 		CalculateCost(start, end, openList);
 		
 		do {
@@ -69,7 +74,7 @@ public class PathFinderScript : MonoBehaviour {
 			if (nodeWithLowestCost.nodePosition == end.nodePosition) {
 				//Debug.Log (closedList[0].nodePosition + " " + closedList[closedList.Count-1].nodePosition);
 				FindEnemyPath(closedList[0], closedList[closedList.Count-1]);
-				enemyPath.Add (end);
+				enemyPath.Add (start);
 				break;
 			} else {				
 				closedList.Add (nodeWithLowestCost);
@@ -81,34 +86,34 @@ public class PathFinderScript : MonoBehaviour {
 
 				foreach (PathNode neighbor in neighborNodesList) {
 					
-					isClosedList = false;
-					isOpenList = false;
+					isInClosedList = false;
+					isInOpenList = false;
 					tentative_GScore = nodeWithLowestCost.nodeG + (Mathf.Abs(nodeWithLowestCost.nodePosition.x-neighbor.nodePosition.x) + Mathf.Abs(nodeWithLowestCost.nodePosition.y-neighbor.nodePosition.y));
 										
 					foreach (PathNode node in openList) {
 						if (node.nodePosition == neighbor.nodePosition) {
-							isOpenList |= true;
+							isInOpenList |= true;
 						} else {
-							isOpenList |= false;
+							isInOpenList |= false;
 						}
 					}
 				
 					foreach (PathNode node in closedList) {
 						if (node.nodePosition == neighbor.nodePosition) {
-							isClosedList |= true;
+							isInClosedList |= true;
 						} else {
-							isClosedList |= false;
+							isInClosedList |= false;
 						}
 					}
 
-	            	if (isClosedList && (tentative_GScore >= neighbor.nodeG)) {
+	            	if (isInClosedList && (tentative_GScore >= neighbor.nodeG)) {
 						continue;
 					}
 					
-					if (!isOpenList || (tentative_GScore < neighbor.nodeG)) {
+					if (!isInOpenList || (tentative_GScore < neighbor.nodeG)) {
 						neighbor.parentNode = nodeWithLowestCost;
 
-						if (!isOpenList) {
+						if (!isInOpenList) {
 							openList.Add (neighbor);
 							CalculateCost(start, end, openList);
 						}
@@ -152,7 +157,7 @@ public class PathFinderScript : MonoBehaviour {
 		foreach (PathNode node in list) {
 			node.nodeG = Mathf.Sqrt(Mathf.Pow((start.nodePosition.x - node.nodePosition.x), 2) + Mathf.Pow((start.nodePosition.y - node.nodePosition.y), 2));
 			node.nodeH = Mathf.Sqrt(Mathf.Pow((end.nodePosition.x - node.nodePosition.x), 2) + Mathf.Pow((end.nodePosition.y - node.nodePosition.y), 2));
-			node.nodeF = node.nodeH + node.nodeG;
+			node.nodeF = node.nodeH + node.nodeG + node.nodeHandicap;
 		}
 	}
 	
@@ -176,39 +181,14 @@ public class PathFinderScript : MonoBehaviour {
 		return returnTile;		
 	}
 	
-	void PaintNodeBlue(PathNode node){
+	void PaintNode(PathNode node, Material color){
 		GameObject tile = FindTileByNode(node);
-		levelScript.ChangeTileMaterial(tile, blue);
+		levelScript.ChangeTileMaterial(tile, color);
 	}
 	
-	void PaintNodeRed(PathNode node){
-		GameObject tile = FindTileByNode(node);
-		levelScript.ChangeTileMaterial(tile, red);
-	}
-	
-	void PaintNodeGreen(PathNode node){
-		GameObject tile = FindTileByNode(node);
-		levelScript.ChangeTileMaterial(tile, green);
-	}
-
-	
-	void PaintOpenListNodes(){
-		foreach (PathNode node in openList) {
-			PaintNodeBlue (node);
+	void PaintList(List<PathNode> list, Material color){
+		foreach (PathNode node in list) {
+			PaintNode (node, color);
 		}
-	}
-	
-	void PaintPathList(){
-		foreach (PathNode node in enemyPath) {
-			PaintNodeGreen (node);
-		}
-	}
-		
-	void PaintClosedListNodes(){
-		foreach (PathNode node in closedList) {
-			PaintNodeRed (node);
-		}
-	}
-	
-	
+	}	
 }

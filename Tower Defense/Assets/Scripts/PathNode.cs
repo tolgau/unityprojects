@@ -7,7 +7,6 @@ public class PathNode {
 	public float nodeF, nodeG, nodeH;
 	public float nodeHandicap;
 	public PathNode parentNode;
-	public GameObject associatedObject;
 	protected PathFinderScript pathFinderScript;
 	
 	public PathNode(){

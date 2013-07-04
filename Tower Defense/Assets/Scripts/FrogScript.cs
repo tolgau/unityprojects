@@ -10,11 +10,6 @@ public class FrogScript : EnemyBaseScript {
 	
 	// Update is called once per frame
 	protected override void Update () {
-		if(Input.GetKeyDown("space")){
-			GameObject currentTempTile = GetCurrentTile();
- 			Debug.Log(currentTempTile.transform.position.x + " " + currentTempTile.transform.position.y + " " + currentTempTile.tag);
-		}
-		base.Update();
-	
+		base.Update();			
 	}
 }

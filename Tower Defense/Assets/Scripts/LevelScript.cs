@@ -51,8 +51,8 @@ public class LevelScript : MonoBehaviour {
 		startPoint = Random.Range(-(mapWidth/2-2), mapWidth/2-2);
 		endPoint = Random.Range(-(mapWidth/2-2), mapWidth/2-2);
 		BuildMap(mapWidth/2,mapHeight/2);
-		Instantiate(Frog,new Vector3(startPoint,mapHeight/2,-0.5f),Quaternion.Euler(0,0,180));
 		GameObject pathFinder = (GameObject)Instantiate(PathFinder);
+		Instantiate(Frog,new Vector3(startPoint,mapHeight/2,-0.5f),Quaternion.Euler(0,0,180));
 		pathFinderScript = pathFinder.GetComponent<PathFinderScript>();
 	}
 	
@@ -61,14 +61,14 @@ public class LevelScript : MonoBehaviour {
 		
 		//Initiate position vector
 		Vector3 positionVector = new Vector3(0,0,0);
-		
+		Vector3 gatePositionVector = new Vector3(0,0,0);
 		//Start from half of mapVer in order to center the camera
 		for(float y=-mapVer; y<=mapVer; y++){
 			//Same for mapHor
 			for(float x=-mapHor; x<=mapHor; x++){
 
 				positionVector = new Vector3(x,y,0);
-				
+				gatePositionVector = new Vector3(x,y,-1.1f);
 				if (x==mapHor) {
 					DrawObject(Wall, positionVector);
 				} else if (x==-mapHor) {
@@ -77,10 +77,12 @@ public class LevelScript : MonoBehaviour {
 					DrawObject(Wall, positionVector);
 				} else if (y==-mapVer && (x<endPoint || x>endPoint)) {
 					DrawObject(Wall, positionVector);
+				} else if ( y==0 && (x<12 && x > -12)) {
+					DrawObject(Wall, positionVector);
 				} else if (y==mapVer && (x == startPoint)){
-					DrawObject(GateEnter, positionVector);
+					DrawObject(GateEnter, gatePositionVector);
 				} else if (y==-mapVer && (x == endPoint)) {
-					DrawObject(GateExit, positionVector);
+					DrawObject(GateExit, gatePositionVector);
 				} else {
 					DrawObject(Tile, positionVector);
 				}				
@@ -88,9 +90,10 @@ public class LevelScript : MonoBehaviour {
 		}
 	}
 	
-	void DrawObject(GameObject gameObject, Vector3 positionVector) {
+	GameObject DrawObject(GameObject gameObject, Vector3 positionVector) {
 		
 		Instantiate(gameObject, positionVector, rotation);
+		return gameObject;
 	}
 	
 	// Update is called once per frame
