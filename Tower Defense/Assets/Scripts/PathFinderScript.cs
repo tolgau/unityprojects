@@ -68,37 +68,40 @@ public class PathFinderScript : MonoBehaviour {
 	}
 	
 	void FindShortestPathBetweenNodes(PathNode start, PathNode end){		
-		
 		bool isInClosedList=false, isInOpenList=false;
 		float tentative_GScore;
 		PathNode nodeWithLowestCost;
-			
+		
 		openList.Add (start);
 		enemyPath.Add (end);
-		CalculateCost(start, end, openList);
+		Calculate_G(start, openList[0]);
+		Calculate_H(end, openList[0]);
+		openList[0].nodeF = openList[0].nodeG + openList[0].nodeH;
 		
-		do {
+		while(openList.Count != 0) {//do {
 			nodeWithLowestCost = FindLowestCost(openList); 
 						
 			if (nodeWithLowestCost.nodePosition == end.nodePosition) {
-				//Debug.Log (closedList[0].nodePosition + " " + closedList[closedList.Count-1].nodePosition);
 				FindEnemyPath(closedList[0], closedList[closedList.Count-1]);
 				enemyPath.Add (start);
 				break;
 			} else {				
 				closedList.Add (nodeWithLowestCost);
 				openList.Remove (nodeWithLowestCost);
-			
+
 				List<PathNode> neighborNodesList = new List<PathNode>();
 				FindNeighborNodes(nodeWithLowestCost, neighborNodesList);
-				CalculateCost(start, end, neighborNodesList);
 
 				foreach (PathNode neighbor in neighborNodesList) {
 					
+					Calculate_G(start, neighbor);
+					Calculate_H(end, neighbor);
+					neighbor.nodeF = neighbor.nodeG + neighbor.nodeH;
+					
 					isInClosedList = false;
 					isInOpenList = false;
-					tentative_GScore = nodeWithLowestCost.nodeG + (Mathf.Abs(nodeWithLowestCost.nodePosition.x-neighbor.nodePosition.x) + Mathf.Abs(nodeWithLowestCost.nodePosition.y-neighbor.nodePosition.y));
-										
+					tentative_GScore = nodeWithLowestCost.nodeG + (Mathf.Abs(nodeWithLowestCost.nodePosition.x-neighbor.nodePosition.x) + Mathf.Abs(nodeWithLowestCost.nodePosition.y-neighbor.nodePosition.y)) + neighbor.nodeHandicap;
+					
 					foreach (PathNode node in openList) {
 						if (node.nodePosition == neighbor.nodePosition) {
 							isInOpenList |= true;
@@ -121,16 +124,18 @@ public class PathFinderScript : MonoBehaviour {
 					
 					if (!isInOpenList || (tentative_GScore < neighbor.nodeG)) {
 						neighbor.parentNode = nodeWithLowestCost;
+						neighbor.nodeG = tentative_GScore;
+						Calculate_H(end, neighbor);
+						neighbor.nodeF = neighbor.nodeG + neighbor.nodeH;
 
 						if (!isInOpenList) {
 							openList.Add (neighbor);
-							CalculateCost(start, end, openList);
-						}
+						} 
 					}
 				}
 				
 			}
-		} while(closedList[closedList.Count - 1].nodePosition != end.nodePosition);
+		} //while(closedList[closedList.Count - 1].nodePosition != end.nodePosition);
 	}
 	
 	void FindEnemyPath(PathNode start, PathNode end) {
@@ -159,15 +164,23 @@ public class PathFinderScript : MonoBehaviour {
 		}
 	}
 	
-	void CalculateCost(PathNode start, PathNode end, List<PathNode> list) {
+	void Calculate_G(PathNode start, PathNode node) {
+		//node.nodeG = Mathf.Sqrt(Mathf.Pow((start.nodePosition.x - node.nodePosition.x), 2) + Mathf.Pow((start.nodePosition.y - node.nodePosition.y), 2));
+		node.nodeG = Mathf.Abs(start.nodePosition.x - node.nodePosition.x) + Mathf.Abs(start.nodePosition.y - node.nodePosition.y);
+		node.nodeG = node.nodeG + node.nodeHandicap;
+		//node.nodeH = Mathf.Sqrt(Mathf.Pow((end.nodePosition.x - node.nodePosition.x), 2) + Mathf.Pow((end.nodePosition.y - node.nodePosition.y), 2));
+		//node.nodeF = node.nodeH + node.nodeG + node.nodeHandicap;
+	}
+	
+	void Calculate_H(PathNode end, PathNode node) {
 		// nodeG = the exact cost to reach this node from the starting node.
 		// nodeH = the estimated(heuristic) cost to reach the destination from here.
 		// nodeF = nodeG + nodeH  As the algorithm runs the F value of a node tells us how expensive we think it will be to reach our goal by way of that node.
-		foreach (PathNode node in list) {
-			node.nodeG = Mathf.Sqrt(Mathf.Pow((start.nodePosition.x - node.nodePosition.x), 2) + Mathf.Pow((start.nodePosition.y - node.nodePosition.y), 2));
-			node.nodeH = Mathf.Sqrt(Mathf.Pow((end.nodePosition.x - node.nodePosition.x), 2) + Mathf.Pow((end.nodePosition.y - node.nodePosition.y), 2));
-			node.nodeF = node.nodeH + node.nodeG + node.nodeHandicap;
-		}
+		//node.nodeG = Mathf.Sqrt(Mathf.Pow((start.nodePosition.x - node.nodePosition.x), 2) + Mathf.Pow((start.nodePosition.y - node.nodePosition.y), 2));
+		//node.nodeG = Mathf.Abs(start.nodePosition.x - node.nodePosition.x) + Mathf.Abs(start.nodePosition.y - node.nodePosition.y);
+		node.nodeH = Mathf.Sqrt(Mathf.Pow((end.nodePosition.x - node.nodePosition.x), 2) + Mathf.Pow((end.nodePosition.y - node.nodePosition.y), 2));
+		node.nodeH = node.nodeH + node.nodeHandicap;
+		//node.nodeF = node.nodeG + node.nodeH;
 	}
 	
 	PathNode FindLowestCost(List<PathNode> openList) {

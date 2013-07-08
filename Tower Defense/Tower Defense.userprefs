@@ -2,12 +2,12 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\LevelScript.cs">
     <Files>
-      <File FileName="Assets\Scripts\PathFinderScript.cs" Line="169" Column="27" />
-      <File FileName="Assets\Scripts\EnemyBaseScript.cs" Line="62" Column="3" />
+      <File FileName="Assets\Scripts\PathFinderScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\EnemyBaseScript.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\FrogScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\LevelScript.cs" Line="105" Column="48" />
+      <File FileName="Assets\Scripts\LevelScript.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\TowerScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\TileScript.cs" Line="27" Column="2" />
+      <File FileName="Assets\Scripts\TileScript.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\PathNode.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>

@@ -78,8 +78,8 @@ public class LevelScript : MonoBehaviour {
 					DrawObject(Wall, positionVector);
 				} else if (y==-mapVer && (x<endPoint || x>endPoint)) {
 					DrawObject(Wall, positionVector);
-				} else if ( y==0 && (x<12 && x > -12)) {
-					DrawObject(Wall, positionVector);
+				//} else if ( y==0 && (x<12 && x > -12)) {
+				//	DrawObject(Wall, positionVector);
 				} else if (y==mapVer && (x == startPoint)){
 					DrawObject(GateEnter, gatePositionVector);
 				} else if (y==-mapVer && (x == endPoint)) {
