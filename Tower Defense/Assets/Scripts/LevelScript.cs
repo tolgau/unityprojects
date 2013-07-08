@@ -10,6 +10,7 @@ public class LevelScript : MonoBehaviour {
 	public GameObject GateEnter;
 	public GameObject GateExit;
 	public GameObject PathFinder;
+	public Material wall;
 	public int mapWidth;
 	public int mapHeight;
 	public PathFinderScript pathFinderScript;
@@ -98,7 +99,21 @@ public class LevelScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
-	}
-	
+		if (Input.GetButtonDown("Fire1")) {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			RaycastHit hit;
+            if (Physics.Raycast(ray, out hit)){
+				hit.transform.gameObject.tag = "Wall";
+				hit.transform.gameObject.renderer.material = wall;
+				TileScript tempTileScript = hit.transform.gameObject.GetComponent<TileScript>();
+				tempTileScript.SetDefaultMaterial(wall);
+				float mapHor = hit.transform.position.x;
+				float mapVer = hit.transform.position.y;
+				PathNode tempNode = pathFinderScript.GetNode(mapHor, mapVer);
+				tempNode.nodeHandicap = 1000;
+				pathFinderScript.FindShortestPathBetweenGates();
+			}
+        
+    	}
+	}	
 }

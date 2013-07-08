@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class TileScript : MonoBehaviour {
 	public Material yellow; //Debug
 	protected Material current; //Debug
+	protected Material defaultMaterial; //Debug
 	protected PathFinderScript pathFinderScript;
 	protected LevelScript levelScript;
 	protected List<GameObject> tileOccupants = new List<GameObject>();
@@ -18,6 +19,11 @@ public class TileScript : MonoBehaviour {
 			levelScript.ChangeTileMaterial(this.gameObject, yellow); //Debug
 		}
 	}
+	
+	public void SetDefaultMaterial(Material material){
+		defaultMaterial = material;
+	}
+	
 	public void DeregisterTileOccupant(GameObject gameObject){
 		//Add tile to the list
 		tileOccupants.Remove(gameObject);
@@ -27,9 +33,14 @@ public class TileScript : MonoBehaviour {
 		}
 	}
 	
+	public void RevertMaterialToPrefab(){
+		this.gameObject.renderer.material = defaultMaterial;
+	}
+	
 	// Use this for initialization
 	protected virtual void Start () {
 		current = this.renderer.material;
+		defaultMaterial = this.renderer.material;
 		//Get LevelScript instance
 		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
 		//Put the tile in generic list

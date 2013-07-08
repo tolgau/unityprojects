@@ -28,6 +28,16 @@ public class PathFinderScript : MonoBehaviour {
 		return enemyPath;
 	}
 	
+	public PathNode GetNode(float mapHor, float mapVer){
+		PathNode result=null;
+		foreach (PathNode node in allNodes)
+		{
+		    if(node.nodePosition.x == mapHor && node.nodePosition.y == mapVer)
+				result = node;
+		}
+		return result;
+	}
+	
 	public void RegisterAsNode(GameObject gameObject){
 		PathNode node = new PathNode();
 		node.nodePosition = gameObject.transform.position;
@@ -37,8 +47,6 @@ public class PathFinderScript : MonoBehaviour {
 			node.nodeHandicap = 0;
 		}
 		RegisterNode(node);
-		//TODO Switch statement which looks at an object's tag or attribute and decides for a handicap value to be used in F calculation.
-		//return node;
 	}
 	
 	public void FindShortestPathBetweenGates(){
@@ -52,6 +60,7 @@ public class PathFinderScript : MonoBehaviour {
 		end.nodePosition = gateExit[0].transform.position;
 		end.nodePosition.y++;
 		end.nodePosition.z = 0f;
+		InitiatePathFinder();
 		FindShortestPathBetweenNodes(start, end);
 		PaintList(closedList, red);
 		PaintList(openList, blue);
@@ -184,6 +193,32 @@ public class PathFinderScript : MonoBehaviour {
 	void PaintNode(PathNode node, Material color){
 		GameObject tile = FindTileByNode(node);
 		levelScript.ChangeTileMaterial(tile, color);
+	}
+	
+	void InitiatePathFinder(){
+		ResetListTilesToPrefab();
+		closedList.Clear();
+		openList.Clear();
+		enemyPath.Clear();
+	}
+	
+	void ResetListTilesToPrefab(){
+		foreach (PathNode node in openList) {
+			GameObject tile = FindTileByNode(node);
+			TileScript tempTileScript = tile.GetComponent<TileScript>();
+			tempTileScript.RevertMaterialToPrefab();
+		}
+		foreach (PathNode node in closedList) {
+			GameObject tile = FindTileByNode(node);
+			TileScript tempTileScript = tile.GetComponent<TileScript>();
+			tempTileScript.RevertMaterialToPrefab();
+		}
+		foreach (PathNode node in enemyPath) {
+			GameObject tile = FindTileByNode(node);
+			TileScript tempTileScript = tile.GetComponent<TileScript>();
+			tempTileScript.RevertMaterialToPrefab();
+		}
+		
 	}
 	
 	void PaintList(List<PathNode> list, Material color){
