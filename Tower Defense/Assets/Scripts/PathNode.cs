@@ -12,10 +12,6 @@ public class PathNode {
 	protected PathFinderScript pathFinderScript;
 	
 	public PathNode(){
-		//Get LevelScript instance
-		pathFinderScript = GameObject.Find("PathFinder(Clone)").GetComponent<PathFinderScript>();
-		//Put the tile in generic list
-		//pathFinderScript.RegisterNode(this);
-		//pathFinderScript.PrintNodeList();
+
 	}
 }

@@ -18,10 +18,12 @@ public class PathFinderScript : MonoBehaviour {
 		//PrintNodeList();	
 		FindShortestPathBetweenGates();
 	}
+	
 	public enum pathFinderAlgorithm {
 		aStar = 1,
 		breadthFirst = 2,
 	};
+	
 	public void RegisterNode(PathNode node){
 		//Add node to the list
 		allNodes.Add(node);
@@ -65,13 +67,13 @@ public class PathFinderScript : MonoBehaviour {
 		end.nodePosition.z = 0f;
 		InitiatePathFinder();
 		if(alg == pathFinderAlgorithm.aStar)
-			FindShortestPathBetweenNodes(start, end);
+			FindShortestPathAStar(start, end);
 		else if(alg == pathFinderAlgorithm.breadthFirst)
 			enemyPath = FindShortestPathBFF(start, end);
 		else
-			FindShortestPathBetweenNodes(start, end);
-		PaintList(closedList, red);
-		PaintList(openList, blue);
+			FindShortestPathAStar(start, end);
+		//PaintList(closedList, red);
+		//PaintList(openList, blue);
 		PaintList(enemyPath, green);
 	}
 	
@@ -107,12 +109,14 @@ public class PathFinderScript : MonoBehaviour {
 		Debug.Log ("There is no available path from start to destination!");
 		return enemyPath;
 	}
+	
 	private void ClearNodes(){
 		foreach(PathNode node in allNodes){
 			node.closed = false;
 			node.opened = false;
 		}
 	}
+	
 	private List<PathNode> BacktracePath(PathNode node){
 		List<PathNode> result = new List<PathNode>();
 		result.Add(node);
@@ -123,7 +127,7 @@ public class PathFinderScript : MonoBehaviour {
 		return result;
 	}
 	
-	void FindShortestPathBetweenNodes(PathNode start, PathNode end){		
+	void FindShortestPathAStar(PathNode start, PathNode end){		
 		
 		bool isInClosedList=false, isInOpenList=false;
 		float tentative_GScore;
@@ -238,19 +242,19 @@ public class PathFinderScript : MonoBehaviour {
 	void FindNeighborNodes(PathNode activeNode, List<PathNode> neighborNodes) {
 		foreach (PathNode node in allNodes) {
 			// Find east neighbor of activeNode in allNodes
-			if(activeNode.nodePosition.x+1 == node.nodePosition.x && activeNode.nodePosition.y == node.nodePosition.y)
+			if((activeNode.nodePosition.x+1 == node.nodePosition.x && activeNode.nodePosition.y == node.nodePosition.y)&& FindTileByNode(node).tag != "Border")
 				neighborNodes.Add (node);
 			
 			// Find west neighbor of activeNode in allNodes
-			if(activeNode.nodePosition.x-1 == node.nodePosition.x && activeNode.nodePosition.y == node.nodePosition.y)
+			if((activeNode.nodePosition.x-1 == node.nodePosition.x && activeNode.nodePosition.y == node.nodePosition.y)&& FindTileByNode(node).tag != "Border")
 				neighborNodes.Add (node);
 			
 			// Find north neighbor of activeNode in allNodes
-			if(activeNode.nodePosition.x == node.nodePosition.x && activeNode.nodePosition.y+1 == node.nodePosition.y)
+			if((activeNode.nodePosition.x == node.nodePosition.x && activeNode.nodePosition.y+1 == node.nodePosition.y)&& FindTileByNode(node).tag != "Border")
 				neighborNodes.Add (node);
 			
 			// Find south neighbor of activeNode in allNodes
-			if(activeNode.nodePosition.x == node.nodePosition.x && activeNode.nodePosition.y-1 == node.nodePosition.y)
+			if((activeNode.nodePosition.x == node.nodePosition.x && activeNode.nodePosition.y-1 == node.nodePosition.y)&& FindTileByNode(node).tag != "Border")
 				neighborNodes.Add (node);
 		}
 	}

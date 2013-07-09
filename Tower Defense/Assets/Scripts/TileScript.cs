@@ -22,6 +22,7 @@ public class TileScript : MonoBehaviour {
 	
 	public void SetDefaultMaterial(Material material){
 		defaultMaterial = material;
+		current = material;
 	}
 	
 	public void DeregisterTileOccupant(GameObject gameObject){

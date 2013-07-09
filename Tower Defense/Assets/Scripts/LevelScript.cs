@@ -7,10 +7,12 @@ public class LevelScript : MonoBehaviour {
 	public GameObject Tile;
 	public GameObject Frog;
 	public GameObject Wall;
+	public GameObject Border;
 	public GameObject GateEnter;
 	public GameObject GateExit;
 	public GameObject PathFinder;
-	public Material wall;
+	public Material wallMat;
+	public Material tileMat;
 	public int mapWidth;
 	public int mapHeight;
 	public PathFinderScript pathFinderScript;
@@ -28,13 +30,6 @@ public class LevelScript : MonoBehaviour {
 	//Return the tile object instance at the specified horizontal and vertical values
 	public GameObject GetTile(float mapHor, float mapVer){
 		GameObject result=null;
-        /*GameObject result = tileMap.Find(
-        delegate(GameObject tile)
-        {
-            return tile.transform.position.x == mapHor && tile.transform.position.y == mapVer;
-        }
-        );
-        */
 		foreach (GameObject tile in tileMap)
 		{
 		    if(tile.transform.position.x == mapHor && tile.transform.position.y == mapVer)
@@ -71,15 +66,15 @@ public class LevelScript : MonoBehaviour {
 				positionVector = new Vector3(x,y,0);
 				gatePositionVector = new Vector3(x,y,-1.1f);
 				if (x==mapHor) {
-					DrawObject(Wall, positionVector);
+					DrawObject(Border, positionVector);
 				} else if (x==-mapHor) {
-					DrawObject(Wall, positionVector);
+					DrawObject(Border, positionVector);
 				} else if (y==mapVer && (x<startPoint || x>startPoint)) {
-					DrawObject(Wall, positionVector);
+					DrawObject(Border, positionVector);
 				} else if (y==-mapVer && (x<endPoint || x>endPoint)) {
-					DrawObject(Wall, positionVector);
-				} else if ( y==0 && (x<12 && x > -12)) {
-					DrawObject(Wall, positionVector);
+					DrawObject(Border, positionVector);
+				//} else if ( y==0 && (x<12 && x > -12)) {
+				//	DrawObject(Wall, positionVector);
 				} else if (y==mapVer && (x == startPoint)){
 					DrawObject(GateEnter, gatePositionVector);
 				} else if (y==-mapVer && (x == endPoint)) {
@@ -97,23 +92,48 @@ public class LevelScript : MonoBehaviour {
 		return gameObject;
 	}
 	
+	GameObject GetTileUnderMouse(){
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit hit;
+		int layerMask = 1<<8;
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask)){
+			return hit.transform.gameObject;
+		}
+		else
+			return null;
+	}
+	
+	void TileWallCycle(GameObject tile){
+		if (tile.tag == "Tile"){
+			tile.tag = "Wall";
+			tile.renderer.material = wallMat;
+			TileScript tempTileScript = tile.GetComponent<TileScript>();
+			tempTileScript.SetDefaultMaterial(wallMat);
+			float mapHor = tile.transform.position.x;
+			float mapVer = tile.transform.position.y;
+			PathNode tempNode = pathFinderScript.GetNode(mapHor, mapVer);
+			tempNode.nodeHandicap = 1000;
+		} else if (tile.tag == "Wall"){
+			tile.tag = "Tile";
+			tile.renderer.material = tileMat;
+			TileScript tempTileScript = tile.GetComponent<TileScript>();
+			tempTileScript.SetDefaultMaterial(tileMat);
+			float mapHor = tile.transform.position.x;
+			float mapVer = tile.transform.position.y;
+			PathNode tempNode = pathFinderScript.GetNode(mapHor, mapVer);
+			tempNode.nodeHandicap = 0;
+		}
+		else
+			Debug.Log("Please select either a tile or a wall.");
+
+	}
+	
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetButtonDown("Fire1")) {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			RaycastHit hit;
-            if (Physics.Raycast(ray, out hit)){
-				hit.transform.gameObject.tag = "Wall";
-				hit.transform.gameObject.renderer.material = wall;
-				TileScript tempTileScript = hit.transform.gameObject.GetComponent<TileScript>();
-				tempTileScript.SetDefaultMaterial(wall);
-				float mapHor = hit.transform.position.x;
-				float mapVer = hit.transform.position.y;
-				PathNode tempNode = pathFinderScript.GetNode(mapHor, mapVer);
-				tempNode.nodeHandicap = 1000;
-				pathFinderScript.FindShortestPathBetweenGates();
-			}
-        
-    	}
+			GameObject hit = GetTileUnderMouse();
+			TileWallCycle (hit);
+			pathFinderScript.FindShortestPathBetweenGates();
+		}
 	}	
 }

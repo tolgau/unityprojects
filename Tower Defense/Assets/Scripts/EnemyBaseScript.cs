@@ -48,6 +48,7 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 		else
 			return false;
 	}
+	
 	// Update is called once per frame
 	protected virtual void Update ()
 	{
