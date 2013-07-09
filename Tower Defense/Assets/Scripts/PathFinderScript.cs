@@ -62,125 +62,133 @@ public class PathFinderScript : MonoBehaviour {
 		end.nodePosition.z = 0f;
 		InitiatePathFinder();
 		FindShortestPathBetweenNodes(start, end);
-		PaintList(closedList, red);
-		PaintList(openList, blue);
+		//PaintList(closedList, red);
+		//PaintList(openList, blue);
 		PaintList(enemyPath, green);
 	}
 	
 	void FindShortestPathBetweenNodes(PathNode start, PathNode end){		
+		
 		bool isInClosedList=false, isInOpenList=false;
 		float tentative_GScore;
-		PathNode nodeWithLowestCost;
+		PathNode activeNode;
 		
-		openList.Add (start);
+		// Add target node to enemyPath
 		enemyPath.Add (end);
-		Calculate_G(start, openList[0]);
+		
+		// Add start node to openList and calculate its costs
+		openList.Add (start);
+		openList[0].nodeG = 0;
 		Calculate_H(end, openList[0]);
 		openList[0].nodeF = openList[0].nodeG + openList[0].nodeH;
 		
-		while(openList.Count != 0) {//do {
-			nodeWithLowestCost = FindLowestCost(openList); 
-						
-			if (nodeWithLowestCost.nodePosition == end.nodePosition) {
-				FindEnemyPath(closedList[0], closedList[closedList.Count-1]);
+		while(openList.Count != 0) {
+			// Find lowest cost node in openList 
+			activeNode = FindLowestCost(openList); 
+			
+			// Check to see if the node is the target
+			if (activeNode.nodePosition == end.nodePosition) {
+				FindEnemyPath(closedList[0], activeNode);
 				enemyPath.Add (start);
 				break;
-			} else {				
-				closedList.Add (nodeWithLowestCost);
-				openList.Remove (nodeWithLowestCost);
-
+			} else {
+				// Add activeNode to closedList and remove from openList
+				closedList.Add (activeNode);
+				openList.Remove (activeNode);
+				
+				// Find neighbor nodes of activeNode (east, west, north, south)
 				List<PathNode> neighborNodesList = new List<PathNode>();
-				FindNeighborNodes(nodeWithLowestCost, neighborNodesList);
+				FindNeighborNodes(activeNode, neighborNodesList);
 
 				foreach (PathNode neighbor in neighborNodesList) {
 					
-					Calculate_G(start, neighbor);
-					Calculate_H(end, neighbor);
-					neighbor.nodeF = neighbor.nodeG + neighbor.nodeH;
+					// Calculate tentative_GScore to move from activeNode to neighbor node
+					tentative_GScore = activeNode.nodeG + (Mathf.Abs(activeNode.nodePosition.x-neighbor.nodePosition.x) + Mathf.Abs(activeNode.nodePosition.y-neighbor.nodePosition.y)) + neighbor.nodeHandicap;
 					
-					isInClosedList = false;
-					isInOpenList = false;
-					tentative_GScore = nodeWithLowestCost.nodeG + (Mathf.Abs(nodeWithLowestCost.nodePosition.x-neighbor.nodePosition.x) + Mathf.Abs(nodeWithLowestCost.nodePosition.y-neighbor.nodePosition.y)) + neighbor.nodeHandicap;
+					// Check to see if neighbor node is already in openList
+					isInOpenList = isNeighborInOpenList(neighbor, openList);
 					
-					foreach (PathNode node in openList) {
-						if (node.nodePosition == neighbor.nodePosition) {
-							isInOpenList |= true;
-						} else {
-							isInOpenList |= false;
-						}
-					}
-				
-					foreach (PathNode node in closedList) {
-						if (node.nodePosition == neighbor.nodePosition) {
-							isInClosedList |= true;
-						} else {
-							isInClosedList |= false;
-						}
-					}
-
-	            	if (isInClosedList && (tentative_GScore >= neighbor.nodeG)) {
-						continue;
-					}
+					// Check to see if neighbor node is already in closedList
+					isInClosedList = isNeighborInClosedList(neighbor, closedList);
 					
-					if (!isInOpenList || (tentative_GScore < neighbor.nodeG)) {
-						neighbor.parentNode = nodeWithLowestCost;
-						neighbor.nodeG = tentative_GScore;
-						Calculate_H(end, neighbor);
-						neighbor.nodeF = neighbor.nodeG + neighbor.nodeH;
-
+					// if neighbor node is in closedList, continue..
+	            	if (!isInClosedList) {
+						
 						if (!isInOpenList) {
+							// set the neigbor nodes parent to activeNode, calculate its costs, and add to openList
+							neighbor.parentNode = activeNode;
+							neighbor.nodeG = tentative_GScore;
+							Calculate_H(end, neighbor);
+							neighbor.nodeF = neighbor.nodeG + neighbor.nodeH;
 							openList.Add (neighbor);
-						} 
+						} else {
+							// if the tentative_GScore is better, then change the parentNode and update its costs
+							if (tentative_GScore < neighbor.nodeG) {
+								neighbor.parentNode = activeNode;
+								neighbor.nodeG = tentative_GScore;
+								Calculate_H(end, neighbor);
+								neighbor.nodeF = neighbor.nodeG + neighbor.nodeH;
+							}
+						}
 					}
 				}
-				
 			}
-		} //while(closedList[closedList.Count - 1].nodePosition != end.nodePosition);
+		}
 	}
 	
 	void FindEnemyPath(PathNode start, PathNode end) {
 		PathNode currentNode = end;
-		//Debug.Log(currentNode.parentNode);
 		
-		while(currentNode != start) {
+		do {
 			enemyPath.Add(currentNode);
 			currentNode = currentNode.parentNode;
-		}		
+		} while(currentNode != start);		
+	}
+	
+	bool isNeighborInOpenList(PathNode neighbor, List<PathNode> openList) {
+		
+		foreach (PathNode node in openList) {
+			if (node.nodePosition == neighbor.nodePosition)
+				return true;
+		}
+		return false;
+	}
+	
+	bool isNeighborInClosedList(PathNode neighbor, List<PathNode> closedList) {
+		
+		foreach (PathNode node in closedList) {
+			if (node.nodePosition == neighbor.nodePosition)
+				return true;
+		}
+		return false;
 	}
 	
 	void FindNeighborNodes(PathNode activeNode, List<PathNode> neighborNodes) {
 		foreach (PathNode node in allNodes) {
+			// Find east neighbor of activeNode in allNodes
 			if(activeNode.nodePosition.x+1 == node.nodePosition.x && activeNode.nodePosition.y == node.nodePosition.y)
 				neighborNodes.Add (node);
 			
+			// Find west neighbor of activeNode in allNodes
 			if(activeNode.nodePosition.x-1 == node.nodePosition.x && activeNode.nodePosition.y == node.nodePosition.y)
 				neighborNodes.Add (node);
 			
+			// Find north neighbor of activeNode in allNodes
 			if(activeNode.nodePosition.x == node.nodePosition.x && activeNode.nodePosition.y+1 == node.nodePosition.y)
 				neighborNodes.Add (node);
 			
+			// Find south neighbor of activeNode in allNodes
 			if(activeNode.nodePosition.x == node.nodePosition.x && activeNode.nodePosition.y-1 == node.nodePosition.y)
 				neighborNodes.Add (node);
 		}
 	}
 	
-	void Calculate_G(PathNode start, PathNode node) {
-		//node.nodeG = Mathf.Sqrt(Mathf.Pow((start.nodePosition.x - node.nodePosition.x), 2) + Mathf.Pow((start.nodePosition.y - node.nodePosition.y), 2));
-		node.nodeG = Mathf.Abs(start.nodePosition.x - node.nodePosition.x) + Mathf.Abs(start.nodePosition.y - node.nodePosition.y);
-		node.nodeG = node.nodeG + node.nodeHandicap;
-		//node.nodeH = Mathf.Sqrt(Mathf.Pow((end.nodePosition.x - node.nodePosition.x), 2) + Mathf.Pow((end.nodePosition.y - node.nodePosition.y), 2));
-		//node.nodeF = node.nodeH + node.nodeG + node.nodeHandicap;
-	}
-	
 	void Calculate_H(PathNode end, PathNode node) {
-		// nodeG = the exact cost to reach this node from the starting node.
 		// nodeH = the estimated(heuristic) cost to reach the destination from here.
-		// nodeF = nodeG + nodeH  As the algorithm runs the F value of a node tells us how expensive we think it will be to reach our goal by way of that node.
-		//node.nodeG = Mathf.Sqrt(Mathf.Pow((start.nodePosition.x - node.nodePosition.x), 2) + Mathf.Pow((start.nodePosition.y - node.nodePosition.y), 2));
-		//node.nodeG = Mathf.Abs(start.nodePosition.x - node.nodePosition.x) + Mathf.Abs(start.nodePosition.y - node.nodePosition.y);
+		// node.nodeH = Mathf.Abs(end.nodePosition.x - node.nodePosition.x) + Mathf.Abs(end.nodePosition.y - node.nodePosition.y);
 		node.nodeH = Mathf.Sqrt(Mathf.Pow((end.nodePosition.x - node.nodePosition.x), 2) + Mathf.Pow((end.nodePosition.y - node.nodePosition.y), 2));
 		node.nodeH = node.nodeH + node.nodeHandicap;
-		//node.nodeF = node.nodeG + node.nodeH;
+
 	}
 	
 	PathNode FindLowestCost(List<PathNode> openList) {
