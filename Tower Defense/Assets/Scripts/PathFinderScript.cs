@@ -8,6 +8,7 @@ public class PathFinderScript : MonoBehaviour {
 	private List<PathNode> openList = new List<PathNode>();
 	private List<PathNode> allNodes = new List<PathNode>();
 	public List<PathNode> enemyPath = new List<PathNode>();
+	public pathFinderAlgorithm alg = pathFinderAlgorithm.aStar;
 	public Material blue;
 	public Material red;
 	public Material green;
@@ -17,14 +18,16 @@ public class PathFinderScript : MonoBehaviour {
 		//PrintNodeList();	
 		FindShortestPathBetweenGates();
 	}
-	
+	public enum pathFinderAlgorithm {
+		aStar = 1,
+		breadthFirst = 2,
+	};
 	public void RegisterNode(PathNode node){
 		//Add node to the list
 		allNodes.Add(node);
 	}
 		
 	public List<PathNode> GetPath(){
-		//Debug.Log(enemyPath.Count);
 		return enemyPath;
 	}
 	
@@ -61,10 +64,63 @@ public class PathFinderScript : MonoBehaviour {
 		end.nodePosition.y++;
 		end.nodePosition.z = 0f;
 		InitiatePathFinder();
-		FindShortestPathBetweenNodes(start, end);
-		//PaintList(closedList, red);
-		//PaintList(openList, blue);
+		if(alg == pathFinderAlgorithm.aStar)
+			FindShortestPathBetweenNodes(start, end);
+		else if(alg == pathFinderAlgorithm.breadthFirst)
+			enemyPath = FindShortestPathBFF(start, end);
+		else
+			FindShortestPathBetweenNodes(start, end);
+		PaintList(closedList, red);
+		PaintList(openList, blue);
 		PaintList(enemyPath, green);
+	}
+	
+	public List<PathNode> FindShortestPathBFF(PathNode start, PathNode end){
+		PathNode startNode, endNode, node;
+		endNode = end;
+		startNode = start;
+		openList.Clear();
+		ClearNodes();
+		List<PathNode> neighbors = new List<PathNode>();
+		openList.Add(startNode);
+		startNode.opened = true;
+		while(openList.Count != 0){
+			node = openList[0];
+			openList.Remove(node);
+			closedList.Add (node);
+			node.closed = true;
+			if(node.nodePosition.x == endNode.nodePosition.x && node.nodePosition.y == endNode.nodePosition.y){
+				return BacktracePath(node);
+			}
+			neighbors.Clear();
+			FindNeighborTilesOnly(node, neighbors);
+			foreach(PathNode neighborNode in neighbors){
+				if(neighborNode.closed || neighborNode.opened){
+					continue;
+				}
+				openList.Add(neighborNode);
+				neighborNode.opened = true;
+				neighborNode.parentNode = node;
+			}
+		}
+		enemyPath.Clear();
+		Debug.Log ("There is no available path from start to destination!");
+		return enemyPath;
+	}
+	private void ClearNodes(){
+		foreach(PathNode node in allNodes){
+			node.closed = false;
+			node.opened = false;
+		}
+	}
+	private List<PathNode> BacktracePath(PathNode node){
+		List<PathNode> result = new List<PathNode>();
+		result.Add(node);
+		while(node.parentNode != null){
+			node = node.parentNode;
+			result.Add(node);
+		}
+		return result;
 	}
 	
 	void FindShortestPathBetweenNodes(PathNode start, PathNode end){		
@@ -161,6 +217,22 @@ public class PathFinderScript : MonoBehaviour {
 				return true;
 		}
 		return false;
+	}
+	
+	void FindNeighborTilesOnly(PathNode activeNode, List<PathNode> neighborNodes){
+		foreach (PathNode node in allNodes) {
+			if((activeNode.nodePosition.x+1 == node.nodePosition.x && activeNode.nodePosition.y == node.nodePosition.y) && FindTileByNode(node).tag == "Tile")
+				neighborNodes.Add (node);
+			
+			if((activeNode.nodePosition.x-1 == node.nodePosition.x && activeNode.nodePosition.y == node.nodePosition.y) && FindTileByNode(node).tag == "Tile")
+				neighborNodes.Add (node);
+			
+			if((activeNode.nodePosition.x == node.nodePosition.x && activeNode.nodePosition.y+1 == node.nodePosition.y) && FindTileByNode(node).tag == "Tile")
+				neighborNodes.Add (node);
+			
+			if((activeNode.nodePosition.x == node.nodePosition.x && activeNode.nodePosition.y-1 == node.nodePosition.y) && FindTileByNode(node).tag == "Tile")
+				neighborNodes.Add (node);
+		}
 	}
 	
 	void FindNeighborNodes(PathNode activeNode, List<PathNode> neighborNodes) {
