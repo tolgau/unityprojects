@@ -6,8 +6,9 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 	
 	protected PathFinderScript pathFinderScript;
 	protected LevelScript levelScript;
-	protected float speed;
+	protected float speed=0.1f;
 	protected float hitPoints;
+	protected int pathCount;
 	protected GameObject currentTile;
 	protected List<PathNode> path;
 	// Use this for initialization
@@ -17,6 +18,7 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
 		pathFinderScript = GameObject.Find("PathFinder(Clone)").GetComponent<PathFinderScript>();
 		path = pathFinderScript.GetPath();
+		pathCount = path.Count;
 		currentTile = GetCurrentTile();
 		RegisterOccupant(currentTile);
 	}
@@ -36,8 +38,22 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 	}
 	
 	protected virtual void Move(){
-		Vector3 pathPosition = path[0].nodePosition;
-		this.transform.position = Vector3.Lerp(this.gameObject.transform.position, pathPosition, 0.007f);
+		
+		if (pathCount != 0) {
+			Vector3 pathPosition = path[pathCount-1].nodePosition;
+
+			if (pathPosition.x == currentTile.transform.position.x && pathPosition.y == currentTile.transform.position.y)
+				pathCount--;
+			
+			transform.Translate((currentTile.transform.position.x-pathPosition.x)*speed,(currentTile.transform.position.y-pathPosition.y)*speed,0);
+		} else {
+			if (levelScript.GetTile(currentTile.transform.position.x, currentTile.transform.position.y).tag == "GateExit") {
+				DestroyEnemy();
+				levelScript.InstantriateFrog();
+			} else {
+				transform.Translate(0,speed,0);	
+			}
+		}
 	}
 	
 	protected virtual bool MonitorTileChange(){
@@ -52,13 +68,12 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 	// Update is called once per frame
 	protected virtual void Update ()
 	{
-		//Move ();
+		Move ();
 		MonitorTileChange();
 		transform.Translate (new Vector3 (-Input.GetAxis ("Horizontal") * Time.deltaTime * 5, 0, 0));
 		transform.Translate (new Vector3 (0, -Input.GetAxis ("Vertical") * Time.deltaTime * 5, 0));
 		if(Input.GetKeyDown("space")){
 			GameObject currentTempTile = GetCurrentTile();
- 			Debug.Log(currentTempTile.transform.position.x + " " + currentTempTile.transform.position.y + " " + currentTempTile.tag);
 		}
 	}
 	
@@ -72,16 +87,29 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 		}
 	}
 	
+	protected void DestroyEnemy(){
+		DeregisterOccupant(currentTile);
+		Destroy (this.gameObject);
+	}
+	
 	protected virtual bool RegisterOccupant (GameObject tile)
 	{
-		tile.GetComponent<TileScript>().RegisterTileOccupant(this.gameObject);
-		return true;		
+		if(tile != null){
+			tile.GetComponent<TileScript>().RegisterTileOccupant(this.gameObject);
+			return true;
+		}
+		else
+			return false;
 	}
 	
 	protected virtual bool DeregisterOccupant (GameObject tile)
 	{
-		tile.GetComponent<TileScript>().DeregisterTileOccupant(this.gameObject);
-		return true;
+		if(tile != null){
+			tile.GetComponent<TileScript>().DeregisterTileOccupant(this.gameObject);
+			return true;
+		}
+		else
+			return false;
 	}
 	
 }
