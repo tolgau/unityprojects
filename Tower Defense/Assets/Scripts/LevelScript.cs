@@ -11,11 +11,13 @@ public class LevelScript : MonoBehaviour {
 	public GameObject GateEnter;
 	public GameObject GateExit;
 	public GameObject PathFinder;
+	public GameObject Debugger;
 	public Material wallMat;
 	public Material tileMat;
 	public int mapWidth;
 	public int mapHeight;
 	public PathFinderScript pathFinderScript;
+	public GameObject tileUnderMouse;
 	//Generic list the tiles and walls are held in
 	private List<GameObject> tileMap = new List<GameObject>();
 	private Quaternion rotation = Quaternion.Euler(-90,0,0);
@@ -53,6 +55,7 @@ public class LevelScript : MonoBehaviour {
 		GameObject pathFinder = (GameObject)Instantiate(PathFinder);
 		InstantiateFrog();
 		pathFinderScript = pathFinder.GetComponent<PathFinderScript>();
+		Instantiate(Debugger);
 	}
 	
 	//Instantiate according to size	
@@ -95,7 +98,7 @@ public class LevelScript : MonoBehaviour {
 		return gameObject;
 	}
 	
-	GameObject GetTileUnderMouse(){
+	public GameObject GetTileUnderMouse(){
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
 		int layerMask = 1<<8;
@@ -133,9 +136,9 @@ public class LevelScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		tileUnderMouse = GetTileUnderMouse();
 		if (Input.GetButtonDown("Fire1")) {
-			GameObject hit = GetTileUnderMouse();
-			TileWallCycle (hit);
+			TileWallCycle (tileUnderMouse);
 			pathFinderScript.FindShortestPathBetweenGates();
 		}
 	}	

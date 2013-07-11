@@ -279,7 +279,7 @@ public class PathFinderScript : MonoBehaviour {
 		return openList[lowest];
 	}
 	
-	GameObject FindTileByNode(PathNode node){
+	public GameObject FindTileByNode(PathNode node){
 		float horizontal = node.nodePosition.x;
 		float vertical = node.nodePosition.y;
 		GameObject returnTile = null;

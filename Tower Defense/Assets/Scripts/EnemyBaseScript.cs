@@ -90,9 +90,6 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 		MonitorTileChange();
 		transform.Translate (new Vector3 (-Input.GetAxis ("Horizontal") * Time.deltaTime * 5, 0, 0));
 		transform.Translate (new Vector3 (0, -Input.GetAxis ("Vertical") * Time.deltaTime * 5, 0));
-		if(Input.GetKeyDown("space")){
-			GameObject currentTempTile = GetCurrentTile();
-		}
 	}
 	
 	protected virtual bool Registrar(GameObject tileEntered, GameObject tileLeft){

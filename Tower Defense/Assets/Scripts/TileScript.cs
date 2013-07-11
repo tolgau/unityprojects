@@ -8,7 +8,7 @@ public class TileScript : MonoBehaviour {
 	protected Material defaultMaterial; //Debug
 	protected PathFinderScript pathFinderScript;
 	protected LevelScript levelScript;
-	protected List<GameObject> tileOccupants = new List<GameObject>();
+	public List<GameObject> tileOccupants = new List<GameObject>();
 
 	public void RegisterTileOccupant(GameObject gameObject){
 		int occupantCountBefore = tileOccupants.Count;
@@ -18,6 +18,10 @@ public class TileScript : MonoBehaviour {
 			current = this.renderer.material; //Debug
 			levelScript.ChangeTileMaterial(this.gameObject, yellow); //Debug
 		}
+	}
+	
+	public int GetOccupantListCount(){
+		return tileOccupants.Count;
 	}
 	
 	public void SetDefaultMaterial(Material material){
