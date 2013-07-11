@@ -6,7 +6,7 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 	
 	protected PathFinderScript pathFinderScript;
 	protected LevelScript levelScript;
-	protected float speed=0.1f;
+	protected float speed=0.02f;
 	protected float hitPoints;
 	protected int pathCount;
 	protected GameObject currentTile, nextTile, previousTile;

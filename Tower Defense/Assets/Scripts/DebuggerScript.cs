@@ -11,7 +11,7 @@ public class DebuggerScript : MonoBehaviour {
 	public GameObject DebuggerTile;
 
 	void OnGUI () {
-		GUILayout.TextArea("Tile Info:", titleText);
+		GUILayout.TextArea("Tile/Node Info:", titleText);
 		string tileLocX = "";
 		string tileLocY = "";
 		string tileTag = "";
@@ -35,6 +35,16 @@ public class DebuggerScript : MonoBehaviour {
 		}
 		else
 		GUILayout.TextArea("No tile!", regularText);
+		
+		GUILayout.TextArea("\nMob Info:", titleText);
+		if (currentTile != null){
+			TileScript tileScript = currentTile.GetComponent<TileScript>();
+			if(tileScript.GetOccupantListCount() != 0)
+			{
+				GUILayout.TextArea("TODO get enemy info!", regularText);
+			}
+		}
+		GUILayout.TextArea("No mobs!", regularText);
 	}
 	
 	public void InstantiateDebuggerTile(){
