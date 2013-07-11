@@ -42,7 +42,7 @@ public class LevelScript : MonoBehaviour {
 		tile.renderer.material = material;		
 	}
 	
-	public void InstantriateFrog(){
+	public void InstantiateFrog(){
 		Instantiate(Frog,new Vector3(startPoint,mapHeight/2,-0.5f),Quaternion.Euler(0,0,180));
 	}
 	// Use this for initialization
@@ -51,7 +51,7 @@ public class LevelScript : MonoBehaviour {
 		endPoint = Random.Range(-(mapWidth/2-2), mapWidth/2-2);
 		BuildMap(mapWidth/2,mapHeight/2);
 		GameObject pathFinder = (GameObject)Instantiate(PathFinder);
-		InstantriateFrog();
+		InstantiateFrog();
 		pathFinderScript = pathFinder.GetComponent<PathFinderScript>();
 	}
 	

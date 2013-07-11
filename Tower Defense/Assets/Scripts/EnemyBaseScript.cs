@@ -9,7 +9,7 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 	protected float speed=0.1f;
 	protected float hitPoints;
 	protected int pathCount;
-	protected GameObject currentTile;
+	protected GameObject currentTile, nextTile, previousTile;
 	protected List<PathNode> path;
 	// Use this for initialization
 	protected virtual void Start ()
@@ -18,12 +18,13 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
 		pathFinderScript = GameObject.Find("PathFinder(Clone)").GetComponent<PathFinderScript>();
 		path = pathFinderScript.GetPath();
-		pathCount = path.Count;
+		nextTile = levelScript.GetTile(path[path.Count-1].nodePosition.x, path[path.Count-1].nodePosition.y);
+		previousTile = levelScript.GetTile(this.transform.position.x, this.transform.position.y);
 		currentTile = GetCurrentTile();
 		RegisterOccupant(currentTile);
 	}
 	
-	protected virtual float[] GetRoundedLocation(){
+	protected virtual float[] GetRoundedLocation() {
 		//Get frog coordinates and round them. Send integer values although the method expects float
 		float tempHorizontal = Mathf.Round (transform.position.x);
 		float tempVertical = Mathf.Round (transform.position.y);
@@ -31,29 +32,46 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 		return roundedLocation;
 	}
 	
-	protected virtual GameObject GetCurrentTile(){
+	protected virtual GameObject GetCurrentTile() {
 		float[] tempLocation = GetRoundedLocation();
 		currentTile = levelScript.GetTile(tempLocation[0], tempLocation[1]);
 		return currentTile;
 	}
 	
-	protected virtual void Move(){
+	protected virtual int FindinPathList(GameObject tile) {
+		int i = 0;
+		foreach(PathNode node in path) {
+			if (node.nodePosition.x == tile.transform.position.x && node.nodePosition.y == tile.transform.position.y)
+				return i;
+			i++;
+		}
+		return -1;
+	}
+	
+	protected virtual void GetNextTile() {
+		int i = FindinPathList(previousTile);
 		
-		if (pathCount != 0) {
-			Vector3 pathPosition = path[pathCount-1].nodePosition;
+		if (i != -1 && i != 0)
+			nextTile = levelScript.GetTile(path[i-1].nodePosition.x, path[i-1].nodePosition.y);
+		else
+			nextTile = levelScript.GetTile(path[0].nodePosition.x, path[0].nodePosition.y-1);
+	}
+	
+	protected virtual void Move(){
 
-			if (pathPosition.x == currentTile.transform.position.x && pathPosition.y == currentTile.transform.position.y)
-				pathCount--;
+		if (Mathf.Abs(this.transform.position.x - nextTile.transform.position.x) < speed && Mathf.Abs(this.transform.position.y - nextTile.transform.position.y) < speed){
+			previousTile = nextTile;
 			
-			transform.Translate((currentTile.transform.position.x-pathPosition.x)*speed,(currentTile.transform.position.y-pathPosition.y)*speed,0);
-		} else {
-			if (levelScript.GetTile(currentTile.transform.position.x, currentTile.transform.position.y).tag == "GateExit") {
+			GetNextTile();
+			
+			if (previousTile.tag == "GateExit") {
 				DestroyEnemy();
-				levelScript.InstantriateFrog();
-			} else {
-				transform.Translate(0,speed,0);	
+				levelScript.InstantiateFrog();
 			}
 		}
+		
+		transform.Translate((previousTile.transform.position.x-nextTile.transform.position.x)*speed,(previousTile.transform.position.y-nextTile.transform.position.y)*speed,0);
+			
 	}
 	
 	protected virtual bool MonitorTileChange(){
