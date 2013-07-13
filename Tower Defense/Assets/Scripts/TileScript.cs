@@ -8,6 +8,7 @@ public class TileScript : MonoBehaviour {
 	protected Material defaultMaterial; //Debug
 	protected PathFinderScript pathFinderScript;
 	protected LevelScript levelScript;
+	public GameObject tileObject;
 	public List<GameObject> tileOccupants = new List<GameObject>();
 
 	public void RegisterTileOccupant(GameObject gameObject){
@@ -18,6 +19,27 @@ public class TileScript : MonoBehaviour {
 			current = this.renderer.material; //Debug
 			levelScript.ChangeTileMaterial(this.gameObject, yellow); //Debug
 		}
+	}
+	
+	public void RegisterObject(GameObject gameObject){
+		tileObject = gameObject;
+		PathNode correspondingNode = pathFinderScript.GetNode(this.gameObject.transform.position.x, this.gameObject.transform.position.y);
+		correspondingNode.nodeHandicap = 1000;
+	}
+	public GameObject GetOccupyingObject(){
+		return tileObject;
+	}
+	public bool IsEmpty(){
+		if (tileObject == null)
+			return true;
+		else
+			return false;
+	}
+	
+	public void DeregisterObject(GameObject gameObject){
+		tileObject = null;
+		PathNode correspondingNode = pathFinderScript.GetNode(this.gameObject.transform.position.x, this.gameObject.transform.position.y);
+		correspondingNode.nodeHandicap = 0;		
 	}
 	
 	public int GetOccupantListCount(){

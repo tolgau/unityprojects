@@ -6,7 +6,8 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 	
 	protected PathFinderScript pathFinderScript;
 	protected LevelScript levelScript;
-	protected float speed=0.02f;
+	protected float speed=0.1f;
+	protected float placementError = 0.001f;
 	protected float hitPoints;
 	protected int pathCount;
 	protected GameObject currentTile, nextTile, previousTile;
@@ -88,8 +89,6 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 	{
 		Move ();
 		MonitorTileChange();
-		transform.Translate (new Vector3 (-Input.GetAxis ("Horizontal") * Time.deltaTime * 5, 0, 0));
-		transform.Translate (new Vector3 (0, -Input.GetAxis ("Vertical") * Time.deltaTime * 5, 0));
 	}
 	
 	protected virtual bool Registrar(GameObject tileEntered, GameObject tileLeft){

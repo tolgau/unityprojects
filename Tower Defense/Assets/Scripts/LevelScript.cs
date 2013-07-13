@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public class LevelScript : MonoBehaviour {
 	
 	public GameObject Tile;
-	public GameObject Frog;
 	public GameObject Wall;
+	public GameObject Frog;
 	public GameObject Border;
 	public GameObject GateEnter;
 	public GameObject GateExit;
@@ -72,28 +72,25 @@ public class LevelScript : MonoBehaviour {
 				positionVector = new Vector3(x,y,0);
 				gatePositionVector = new Vector3(x,y,-1.1f);
 				if (x==mapHor) {
-					DrawObject(Border, positionVector);
+					DrawTiles(Border, positionVector);
 				} else if (x==-mapHor) {
-					DrawObject(Border, positionVector);
+					DrawTiles(Border, positionVector);
 				} else if (y==mapVer && (x<startPoint || x>startPoint)) {
-					DrawObject(Border, positionVector);
+					DrawTiles(Border, positionVector);
 				} else if (y==-mapVer && (x<endPoint || x>endPoint)) {
-					DrawObject(Border, positionVector);
-				//} else if ( y==0 && (x<12 && x > -12)) {
-				//	DrawObject(Wall, positionVector);
+					DrawTiles(Border, positionVector);
 				} else if (y==mapVer && (x == startPoint)){
-					DrawObject(GateEnter, gatePositionVector);
+					DrawTiles(GateEnter, gatePositionVector);
 				} else if (y==-mapVer && (x == endPoint)) {
-					DrawObject(GateExit, gatePositionVector);
+					DrawTiles(GateExit, gatePositionVector);
 				} else {
-					DrawObject(Tile, positionVector);
+					DrawTiles(Tile, positionVector);
 				}				
 			}
 		}
 	}
 	
-	GameObject DrawObject(GameObject gameObject, Vector3 positionVector) {
-		
+	GameObject DrawTiles(GameObject gameObject, Vector3 positionVector) {
 		Instantiate(gameObject, positionVector, rotation);
 		return gameObject;
 	}
@@ -109,36 +106,36 @@ public class LevelScript : MonoBehaviour {
 			return null;
 	}
 	
-	void TileWallCycle(GameObject tile){
-		if (tile.tag == "Tile"){
-			tile.tag = "Wall";
-			tile.renderer.material = wallMat;
-			TileScript tempTileScript = tile.GetComponent<TileScript>();
-			tempTileScript.SetDefaultMaterial(wallMat);
-			float mapHor = tile.transform.position.x;
-			float mapVer = tile.transform.position.y;
-			PathNode tempNode = pathFinderScript.GetNode(mapHor, mapVer);
-			tempNode.nodeHandicap = 1000;
-		} else if (tile.tag == "Wall"){
-			tile.tag = "Tile";
-			tile.renderer.material = tileMat;
-			TileScript tempTileScript = tile.GetComponent<TileScript>();
-			tempTileScript.SetDefaultMaterial(tileMat);
-			float mapHor = tile.transform.position.x;
-			float mapVer = tile.transform.position.y;
-			PathNode tempNode = pathFinderScript.GetNode(mapHor, mapVer);
-			tempNode.nodeHandicap = 0;
+	void PlaceObject(GameObject tile, GameObject placedObject){
+		TileScript tempTileScript = tile.GetComponent<TileScript>();
+		if(tempTileScript.IsEmpty()){
+			GameObject tempObject = (GameObject)Instantiate(placedObject,new Vector3(tile.transform.position.x,tile.transform.position.y,-0.5f),Quaternion.Euler(0,0,180));
+			tempTileScript.RegisterObject(tempObject);
 		}
 		else
-			Debug.Log("Please select either a tile or a wall.");
-
+			Debug.Log("Tile already occupied!");
+	}
+	
+	void RemoveObject(GameObject tile){
+		TileScript tempTileScript = tile.GetComponent<TileScript>();
+		if(!tempTileScript.IsEmpty()){
+			GameObject tempObject = tempTileScript.GetOccupyingObject();
+			tempTileScript.DeregisterObject(tempObject);
+			Destroy(tempObject);
+		}
+		else
+			Debug.Log("Tile already free!");
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		tileUnderMouse = GetTileUnderMouse();
 		if (Input.GetButtonDown("Fire1")) {
-			TileWallCycle (tileUnderMouse);
+			PlaceObject(tileUnderMouse, Wall);
+			pathFinderScript.FindShortestPathBetweenGates();
+		}
+		if (Input.GetButtonDown("Fire2")) {
+			RemoveObject(tileUnderMouse);
 			pathFinderScript.FindShortestPathBetweenGates();
 		}
 	}	
