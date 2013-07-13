@@ -36,6 +36,18 @@ public class TileScript : MonoBehaviour {
 			return false;
 	}
 	
+	public bool IsOnPath(){
+		bool result = false;
+		PathNode tempNode = pathFinderScript.GetNode(this.transform.position.x, this.transform.position.y);
+		List<PathNode> tempPath = pathFinderScript.GetPath();
+		foreach(PathNode node in tempPath){
+			if (node == tempNode)
+				result = true;
+		}
+		return result;
+		
+	}
+	
 	public void DeregisterObject(GameObject gameObject){
 		tileObject = null;
 		PathNode correspondingNode = pathFinderScript.GetNode(this.gameObject.transform.position.x, this.gameObject.transform.position.y);

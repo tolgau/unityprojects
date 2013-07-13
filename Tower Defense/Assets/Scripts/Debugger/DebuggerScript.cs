@@ -9,9 +9,11 @@ public class DebuggerScript : MonoBehaviour {
 	protected PathFinderScript pathFinderScript;
 	protected GameObject currentTile;
 	public GameObject DebuggerTile;
+	public Texture wallTexture;
+	public Texture towerTexture;
 
 	void OnGUI () {
-		GUILayout.TextArea("Tile/Node Info:", titleText);
+		GUILayout.Label("Tile/Node Info:", titleText);
 		string tileLocX = "";
 		string tileLocY = "";
 		string tileTag = "";
@@ -31,20 +33,28 @@ public class DebuggerScript : MonoBehaviour {
 			int tilePathOrderI = path.IndexOf(tempNode);
 			tilePathOrder = tilePathOrderI.ToString();
 			handicap = tempNode.nodeHandicap.ToString();
-			GUILayout.TextArea("x: " + tileLocX + "\ny: " + tileLocY + "\ntag: " + tileTag + "\noccupants: " + tileListCount + "\npathorder: " + tilePathOrder + "\nhandicap: " + handicap, regularText);
+			GUILayout.Label("x: " + tileLocX + "\ny: " + tileLocY + "\ntag: " + tileTag + "\noccupants: " + tileListCount + "\npathorder: " + tilePathOrder + "\nhandicap: " + handicap, regularText);
 		}
 		else
-		GUILayout.TextArea("No tile!", regularText);
+		GUILayout.Label("No tile!", regularText);
 		
-		GUILayout.TextArea("\nMob Info:", titleText);
+		GUILayout.Label("\nMob Info:", titleText);
 		if (currentTile != null){
 			TileScript tileScript = currentTile.GetComponent<TileScript>();
 			if(tileScript.GetOccupantListCount() != 0)
 			{
-				GUILayout.TextArea("TODO get enemy info!", regularText);
+				GUILayout.Label("TODO get enemy info!", regularText);
 			}
 		}
-		GUILayout.TextArea("No mobs!", regularText);
+		GUILayout.Label("No mobs!", regularText);
+		
+        GUILayout.BeginArea (new Rect (Screen.width-120,5,100,200));
+		if(GUILayout.Button(wallTexture, GUILayout.Width(35),GUILayout.Height(35)))
+			levelScript.cursorObject = levelScript.Wall;
+		if(GUILayout.Button(towerTexture, GUILayout.Width(35),GUILayout.Height(35)))
+			levelScript.cursorObject = levelScript.ArrowTower;
+		GUILayout.Label("- Choose an object to place. \n\n- Right click to delete.");
+        GUILayout.EndArea ();		
 	}
 	
 	public void InstantiateDebuggerTile(){

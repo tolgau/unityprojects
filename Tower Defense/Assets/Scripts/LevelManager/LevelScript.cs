@@ -3,21 +3,31 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class LevelScript : MonoBehaviour {
-	
-	public GameObject Tile;
+	//Objects
+	public GameObject ArrowTower;
 	public GameObject Wall;
 	public GameObject Frog;
+	//END: Objects
+	
+	//Level
+	public GameObject Tile;
 	public GameObject Border;
 	public GameObject GateEnter;
 	public GameObject GateExit;
+	//END: Level
+	
+	//Managers
 	public GameObject PathFinder;
 	public GameObject Debugger;
+	//END: Managers
+	
 	public Material wallMat;
 	public Material tileMat;
 	public int mapWidth;
 	public int mapHeight;
 	public PathFinderScript pathFinderScript;
 	public GameObject tileUnderMouse;
+	public GameObject cursorObject;
 	//Generic list the tiles and walls are held in
 	private List<GameObject> tileMap = new List<GameObject>();
 	private Quaternion rotation = Quaternion.Euler(-90,0,0);
@@ -49,6 +59,7 @@ public class LevelScript : MonoBehaviour {
 	}
 	// Use this for initialization
 	void Start () {
+		cursorObject = Wall;
 		startPoint = Random.Range(-(mapWidth/2-2), mapWidth/2-2);
 		endPoint = Random.Range(-(mapWidth/2-2), mapWidth/2-2);
 		BuildMap(mapWidth/2,mapHeight/2);
@@ -107,36 +118,45 @@ public class LevelScript : MonoBehaviour {
 	}
 	
 	void PlaceObject(GameObject tile, GameObject placedObject){
-		TileScript tempTileScript = tile.GetComponent<TileScript>();
-		if(tempTileScript.IsEmpty()){
-			GameObject tempObject = (GameObject)Instantiate(placedObject,new Vector3(tile.transform.position.x,tile.transform.position.y,-0.5f),Quaternion.Euler(0,0,180));
-			tempTileScript.RegisterObject(tempObject);
+		if(tile != null){
+			TileScript tempTileScript = tile.GetComponent<TileScript>();
+			if(tempTileScript.IsEmpty()){
+				GameObject tempObject = (GameObject)Instantiate(placedObject,new Vector3(tile.transform.position.x,tile.transform.position.y,-0.5f),Quaternion.Euler(0,0,180));
+				tempTileScript.RegisterObject(tempObject);
+			}
+			else
+				Debug.Log("Tile already occupied!");
+			
+			if(tempTileScript.IsOnPath())
+				pathFinderScript.FindShortestPathBetweenGates();
 		}
-		else
-			Debug.Log("Tile already occupied!");
 	}
 	
 	void RemoveObject(GameObject tile){
-		TileScript tempTileScript = tile.GetComponent<TileScript>();
-		if(!tempTileScript.IsEmpty()){
-			GameObject tempObject = tempTileScript.GetOccupyingObject();
-			tempTileScript.DeregisterObject(tempObject);
-			Destroy(tempObject);
+		if(tile != null){
+			TileScript tempTileScript = tile.GetComponent<TileScript>();
+			if(!tempTileScript.IsEmpty()){
+				GameObject tempObject = tempTileScript.GetOccupyingObject();
+				tempTileScript.DeregisterObject(tempObject);
+				Destroy(tempObject);
+			}
+			else
+				Debug.Log("Tile already free!");
+			
+			pathFinderScript.FindShortestPathBetweenGates();
 		}
-		else
-			Debug.Log("Tile already free!");
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		tileUnderMouse = GetTileUnderMouse();
-		if (Input.GetButtonDown("Fire1")) {
-			PlaceObject(tileUnderMouse, Wall);
-			pathFinderScript.FindShortestPathBetweenGates();
-		}
-		if (Input.GetButtonDown("Fire2")) {
-			RemoveObject(tileUnderMouse);
-			pathFinderScript.FindShortestPathBetweenGates();
+		if(tileUnderMouse != null){
+			if (Input.GetButtonDown("Fire1")) {
+				PlaceObject(tileUnderMouse, cursorObject);
+			}
+			if (Input.GetButtonDown("Fire2")) {
+				RemoveObject(tileUnderMouse);
+			}
 		}
 	}	
 }

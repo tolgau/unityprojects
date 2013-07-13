@@ -7,8 +7,8 @@ public class PathNode {
 	public float nodeF, nodeG, nodeH;
 	public float nodeHandicap;
 	public PathNode parentNode;
-	public bool opened;
-	public bool closed;
+	//public bool opened;
+	//public bool closed;
 	protected PathFinderScript pathFinderScript;
 	
 	public PathNode(){

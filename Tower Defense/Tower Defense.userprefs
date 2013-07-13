@@ -1,16 +1,16 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\TileScript.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Debugger\DebuggerScript.cs">
     <Files>
-      <File FileName="Assets\Scripts\DebuggerScript.cs" Line="45" Column="5" />
-      <File FileName="Assets\Scripts\EnemyBaseScript.cs" Line="63" Column="1" />
-      <File FileName="Assets\Scripts\PathFinderScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\FrogScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\LevelScript.cs" Line="139" Column="22" />
-      <File FileName="Assets\Scripts\TowerScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\TileScript.cs" Line="27" Column="31" />
-      <File FileName="Assets\Scripts\PathNode.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\DebuggerTileScript.cs" Line="15" Column="24" />
+      <File FileName="Assets\Scripts\LevelManager\LevelScript.cs" Line="62" Column="23" />
+      <File FileName="Assets\Scripts\Towers\ArrowTowerScript.cs" Line="12" Column="21" />
+      <File FileName="Assets\Scripts\Towers\TowerBaseScript.cs" Line="16" Column="1" />
+      <File FileName="Assets\Scripts\Enemies\EnemyBaseScript.cs" Line="16" Column="19" />
+      <File FileName="Assets\Scripts\Enemies\FrogScript.cs" Line="7" Column="20" />
+      <File FileName="Assets\Scripts\LevelManager\TileScript.cs" Line="39" Column="20" />
+      <File FileName="Assets\Scripts\PathFinder\PathFinderScript.cs" Line="65" Column="5" />
+      <File FileName="Assets\Scripts\PathFinder\PathNode.cs" Line="9" Column="19" />
+      <File FileName="Assets\Scripts\Debugger\DebuggerScript.cs" Line="56" Column="55" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

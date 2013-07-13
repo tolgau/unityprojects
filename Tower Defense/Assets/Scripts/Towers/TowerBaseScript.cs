@@ -1,15 +1,15 @@
 using UnityEngine;
 using System.Collections;
 
-public class TowerScript : MonoBehaviour {
+public abstract class TowerBaseScript : MonoBehaviour {
 
 	// Use this for initialization
-	void Start () {
+	protected virtual void Start () {
 	
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	protected virtual void Update () {
 	
 	}
 }

@@ -8,7 +8,6 @@ public class PathFinderScript : MonoBehaviour {
 	private List<PathNode> openList = new List<PathNode>();
 	private List<PathNode> allNodes = new List<PathNode>();
 	public List<PathNode> enemyPath = new List<PathNode>();
-	public pathFinderAlgorithm alg = pathFinderAlgorithm.aStar;
 	public Material blue;
 	public Material red;
 	public Material green;
@@ -18,11 +17,6 @@ public class PathFinderScript : MonoBehaviour {
 		//PrintNodeList();	
 		FindShortestPathBetweenGates();
 	}
-	
-	public enum pathFinderAlgorithm {
-		aStar = 1,
-		breadthFirst = 2,
-	};
 	
 	public void RegisterNode(PathNode node){
 		//Add node to the list
@@ -66,17 +60,13 @@ public class PathFinderScript : MonoBehaviour {
 		end.nodePosition.y++;
 		end.nodePosition.z = 0f;
 		InitiatePathFinder();
-		if(alg == pathFinderAlgorithm.aStar)
-			FindShortestPathAStar(start, end);
-		else if(alg == pathFinderAlgorithm.breadthFirst)
-			enemyPath = FindShortestPathBFF(start, end);
-		else
-			FindShortestPathAStar(start, end);
+		FindShortestPathAStar(start, end);
 		//PaintList(closedList, red);
 		//PaintList(openList, blue);
 		PaintList(enemyPath, green);
 	}
 	
+	/*
 	public List<PathNode> FindShortestPathBFF(PathNode start, PathNode end){
 		PathNode startNode, endNode, node;
 		endNode = end;
@@ -110,6 +100,7 @@ public class PathFinderScript : MonoBehaviour {
 		return enemyPath;
 	}
 	
+	
 	private void ClearNodes(){
 		foreach(PathNode node in allNodes){
 			node.closed = false;
@@ -126,6 +117,7 @@ public class PathFinderScript : MonoBehaviour {
 		}
 		return result;
 	}
+	*/
 	
 	void FindShortestPathAStar(PathNode start, PathNode end){		
 		
@@ -223,6 +215,7 @@ public class PathFinderScript : MonoBehaviour {
 		return false;
 	}
 	
+	/*
 	void FindNeighborTilesOnly(PathNode activeNode, List<PathNode> neighborNodes){
 		foreach (PathNode node in allNodes) {
 			if((activeNode.nodePosition.x+1 == node.nodePosition.x && activeNode.nodePosition.y == node.nodePosition.y) && FindTileByNode(node).tag == "Tile")
@@ -238,6 +231,7 @@ public class PathFinderScript : MonoBehaviour {
 				neighborNodes.Add (node);
 		}
 	}
+	*/
 	
 	void FindNeighborNodes(PathNode activeNode, List<PathNode> neighborNodes) {
 		foreach (PathNode node in allNodes) {
