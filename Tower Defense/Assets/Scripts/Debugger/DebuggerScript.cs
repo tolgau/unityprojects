@@ -54,7 +54,9 @@ public class DebuggerScript : MonoBehaviour {
 		if(GUILayout.Button(towerTexture, GUILayout.Width(35),GUILayout.Height(35)))
 			levelScript.cursorObject = levelScript.ArrowTower;
 		GUILayout.Label("- Choose an object to place. \n\n- Right click to delete.");
-        GUILayout.EndArea ();		
+		if(GUILayout.Button("Quit"))
+			Application.Quit();
+		GUILayout.EndArea ();		
 	}
 	
 	public void InstantiateDebuggerTile(){
