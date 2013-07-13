@@ -11,6 +11,15 @@ public class PathNode {
 	//public bool closed;
 	protected PathFinderScript pathFinderScript;
 	
+	public PathNode(Vector3 nodePos){
+		nodePosition = nodePos;
+	}
+	
+	public PathNode(Vector3 nodePos, float nodeHand){
+		nodePosition = nodePos;
+		nodeHandicap = nodeHand;
+	}
+	
 	public PathNode(){
 
 	}

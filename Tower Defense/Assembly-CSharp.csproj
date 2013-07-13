@@ -49,6 +49,7 @@
      <Compile Include="Assets\Scripts\Enemies\EnemyBaseScript.cs" />
      <Compile Include="Assets\Scripts\Enemies\FrogScript.cs" />
      <Compile Include="Assets\Scripts\LevelManager\LevelScript.cs" />
+     <Compile Include="Assets\Scripts\LevelManager\SpawnData.cs" />
      <Compile Include="Assets\Scripts\LevelManager\TileScript.cs" />
      <Compile Include="Assets\Scripts\PathFinder\PathFinderScript.cs" />
      <Compile Include="Assets\Scripts\PathFinder\PathNode.cs" />

@@ -3,7 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 public abstract class TowerBaseScript : MonoBehaviour {
-	private List<GameObject> tilesInRange = new List<GameObject>();
+	protected List<GameObject> tilesInRange = new List<GameObject>();
+	protected GameObject target;
+	protected float fireRate;
+	protected float damage;
+	
 	// Use this for initialization
 	protected virtual void Start () {
 		
@@ -18,4 +22,11 @@ public abstract class TowerBaseScript : MonoBehaviour {
 		
 	}
 	
+	protected virtual void MonitorRange(){
+		
+	}
+	
+	protected virtual void Fire(){
+		
+	}
 }

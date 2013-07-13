@@ -54,8 +54,12 @@ public class DebuggerScript : MonoBehaviour {
 		if(GUILayout.Button(towerTexture, GUILayout.Width(35),GUILayout.Height(35)))
 			levelScript.cursorObject = levelScript.ArrowTower;
 		GUILayout.Label("- Choose an object to place. \n\n- Right click to delete.");
-		if(GUILayout.Button("Start"))
-			levelScript.StartLevel();
+		if(GUILayout.Button("Start")){
+			if(levelScript.spawning == false)
+				levelScript.StartLevel();
+			else
+				Debug.Log("Current level still in progress!");
+		}
 		if(GUILayout.Button("Quit"))
 			Application.Quit();
 		GUILayout.EndArea ();		

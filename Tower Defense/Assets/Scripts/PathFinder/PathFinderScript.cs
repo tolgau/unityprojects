@@ -117,6 +117,21 @@ public class PathFinderScript : MonoBehaviour {
 		}
 		return result;
 	}
+	void FindNeighborTilesOnly(PathNode activeNode, List<PathNode> neighborNodes){
+		foreach (PathNode node in allNodes) {
+			if((activeNode.nodePosition.x+1 == node.nodePosition.x && activeNode.nodePosition.y == node.nodePosition.y) && FindTileByNode(node).tag == "Tile")
+				neighborNodes.Add (node);
+			
+			if((activeNode.nodePosition.x-1 == node.nodePosition.x && activeNode.nodePosition.y == node.nodePosition.y) && FindTileByNode(node).tag == "Tile")
+				neighborNodes.Add (node);
+			
+			if((activeNode.nodePosition.x == node.nodePosition.x && activeNode.nodePosition.y+1 == node.nodePosition.y) && FindTileByNode(node).tag == "Tile")
+				neighborNodes.Add (node);
+			
+			if((activeNode.nodePosition.x == node.nodePosition.x && activeNode.nodePosition.y-1 == node.nodePosition.y) && FindTileByNode(node).tag == "Tile")
+				neighborNodes.Add (node);
+		}
+	}
 	*/
 	
 	void FindShortestPathAStar(PathNode start, PathNode end){		
@@ -215,23 +230,6 @@ public class PathFinderScript : MonoBehaviour {
 		return false;
 	}
 	
-	/*
-	void FindNeighborTilesOnly(PathNode activeNode, List<PathNode> neighborNodes){
-		foreach (PathNode node in allNodes) {
-			if((activeNode.nodePosition.x+1 == node.nodePosition.x && activeNode.nodePosition.y == node.nodePosition.y) && FindTileByNode(node).tag == "Tile")
-				neighborNodes.Add (node);
-			
-			if((activeNode.nodePosition.x-1 == node.nodePosition.x && activeNode.nodePosition.y == node.nodePosition.y) && FindTileByNode(node).tag == "Tile")
-				neighborNodes.Add (node);
-			
-			if((activeNode.nodePosition.x == node.nodePosition.x && activeNode.nodePosition.y+1 == node.nodePosition.y) && FindTileByNode(node).tag == "Tile")
-				neighborNodes.Add (node);
-			
-			if((activeNode.nodePosition.x == node.nodePosition.x && activeNode.nodePosition.y-1 == node.nodePosition.y) && FindTileByNode(node).tag == "Tile")
-				neighborNodes.Add (node);
-		}
-	}
-	*/
 	
 	void FindNeighborNodes(PathNode activeNode, List<PathNode> neighborNodes) {
 		foreach (PathNode node in allNodes) {

@@ -26,7 +26,9 @@ public class LevelScript : MonoBehaviour {
 	public float spawnRate = 1f;
 	public float spawnStart = 0f;
 	public float spawnTimes = 0f;
+	public int spawnIndex;
 	public GameObject spawnObject;
+	public List<SpawnData> spawnQueue = new List<SpawnData>();
 	//END: Spawner
 	
 	public Material wallMat;
@@ -71,10 +73,27 @@ public class LevelScript : MonoBehaviour {
 		GameObject pathFinder = (GameObject)Instantiate(PathFinder);
 		pathFinderScript = pathFinder.GetComponent<PathFinderScript>();
 		Instantiate(Debugger);
+		spawnQueue.Add(new SpawnData(Frog, 3f));
+		spawnQueue.Add(new SpawnData(Frog, 2f));
+		spawning = false;
 	}
 	
 	public void StartLevel(){
-		SpawnObjectTimes(Frog, 10f);
+		spawnIndex = -1;
+		SpawnNext();
+		spawning = true;
+	}
+	
+	public void SpawnNext(){
+		spawnIndex++;
+		if(spawnIndex < spawnQueue.Count){
+			GameObject spawnObject = spawnQueue[spawnIndex].spawnObject;
+			float spawnTimes = spawnQueue[spawnIndex].spawnTimes;
+			SpawnObjectTimes(spawnObject, spawnTimes);
+		}else{
+			spawning = false;
+			Debug.Log("End of Queue!");
+		}
 	}
 	
 	public void InstantiateAtStart(GameObject iObject){
@@ -82,8 +101,10 @@ public class LevelScript : MonoBehaviour {
 	}
 	
 	public void SpawnInstantiate(){
-        if (spawnStart + spawnTimes + 1f < Time.time)
+        if (spawnStart + spawnTimes + 0.99f < Time.time){
             CancelInvoke();
+			SpawnNext();
+		}
 		else
 			InstantiateAtStart(spawnObject);
     }
