@@ -67,7 +67,6 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 			
 			if (previousTile.tag == "GateExit") {
 				DestroyEnemy();
-				levelScript.InstantiateFrog();
 			}
 		}
 		

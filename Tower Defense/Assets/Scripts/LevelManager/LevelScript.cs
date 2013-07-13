@@ -21,6 +21,14 @@ public class LevelScript : MonoBehaviour {
 	public GameObject Debugger;
 	//END: Managers
 	
+	//Spawner
+	public bool spawning;
+	public float spawnRate = 1f;
+	public float spawnStart = 0f;
+	public float spawnTimes = 0f;
+	public GameObject spawnObject;
+	//END: Spawner
+	
 	public Material wallMat;
 	public Material tileMat;
 	public int mapWidth;
@@ -54,9 +62,6 @@ public class LevelScript : MonoBehaviour {
 		tile.renderer.material = material;		
 	}
 	
-	public void InstantiateFrog(){
-		Instantiate(Frog,new Vector3(startPoint,mapHeight/2,-0.5f),Quaternion.Euler(0,0,180));
-	}
 	// Use this for initialization
 	void Start () {
 		cursorObject = Wall;
@@ -64,9 +69,31 @@ public class LevelScript : MonoBehaviour {
 		endPoint = Random.Range(-(mapWidth/2-2), mapWidth/2-2);
 		BuildMap(mapWidth/2,mapHeight/2);
 		GameObject pathFinder = (GameObject)Instantiate(PathFinder);
-		InstantiateFrog();
 		pathFinderScript = pathFinder.GetComponent<PathFinderScript>();
 		Instantiate(Debugger);
+	}
+	
+	public void StartLevel(){
+		SpawnObjectTimes(Frog, 10f);
+	}
+	
+	public void InstantiateAtStart(GameObject iObject){
+		Instantiate(iObject,new Vector3(startPoint,mapHeight/2,-0.5f),Quaternion.Euler(0,0,180));
+	}
+	
+	public void SpawnInstantiate(){
+        if (spawnStart + spawnTimes + 1f < Time.time)
+            CancelInvoke();
+		else
+			InstantiateAtStart(spawnObject);
+    }
+	
+	public void SpawnObjectTimes(GameObject sObject, float times){
+		spawnStart = Time.time;
+		spawnTimes = times;
+		spawnObject = sObject;
+		InvokeRepeating("SpawnInstantiate",spawnRate,spawnRate);
+
 	}
 	
 	//Instantiate according to size	

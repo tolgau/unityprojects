@@ -48,12 +48,14 @@ public class DebuggerScript : MonoBehaviour {
 		}
 		GUILayout.Label("No mobs!", regularText);
 		
-        GUILayout.BeginArea (new Rect (Screen.width-120,5,100,200));
+        GUILayout.BeginArea (new Rect (Screen.width-120,5,100,300));
 		if(GUILayout.Button(wallTexture, GUILayout.Width(35),GUILayout.Height(35)))
 			levelScript.cursorObject = levelScript.Wall;
 		if(GUILayout.Button(towerTexture, GUILayout.Width(35),GUILayout.Height(35)))
 			levelScript.cursorObject = levelScript.ArrowTower;
 		GUILayout.Label("- Choose an object to place. \n\n- Right click to delete.");
+		if(GUILayout.Button("Start"))
+			levelScript.StartLevel();
 		if(GUILayout.Button("Quit"))
 			Application.Quit();
 		GUILayout.EndArea ();		
