@@ -10,11 +10,14 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 	protected float placementError = 0.001f;
 	protected float hitPoints;
 	protected int pathCount;
+	protected Material defaultMaterial;
+	public Material blinkMaterial;
 	protected GameObject currentTile, nextTile, previousTile;
 	protected List<PathNode> path;
 	// Use this for initialization
 	protected virtual void Start ()
 	{
+		defaultMaterial = this.renderer.material;
 		//Get LevelScript instance
 		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
 		pathFinderScript = GameObject.Find("PathFinder(Clone)").GetComponent<PathFinderScript>();
@@ -72,6 +75,22 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 		
 		transform.Translate((previousTile.transform.position.x-nextTile.transform.position.x)*speed,(previousTile.transform.position.y-nextTile.transform.position.y)*speed,0);
 			
+	}
+	public void Damage(float damage){
+		if(hitPoints <= damage)
+			DestroyEnemy();
+		else
+			Blink();
+			hitPoints = hitPoints - damage;
+	}
+	
+	void Blink(){
+		this.renderer.material = blinkMaterial;
+		Invoke("ChangeColor", 0.05f);
+	}
+	
+	void ChangeColor(){
+		this.renderer.material = defaultMaterial;
 	}
 	
 	protected virtual bool MonitorTileChange(){
