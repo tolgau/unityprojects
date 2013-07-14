@@ -43,10 +43,13 @@ public class DebuggerScript : MonoBehaviour {
 			TileScript tileScript = currentTile.GetComponent<TileScript>();
 			if(tileScript.GetOccupantListCount() != 0)
 			{
-				GUILayout.Label("TODO get enemy info!", regularText);
+				List <GameObject> list = tileScript.tileOccupants;
+				foreach(GameObject enemy in list){
+					EnemyBaseScript eScript = enemy.GetComponent<EnemyBaseScript>();
+					GUILayout.Label("Hit Points: "+ eScript.hitPoints, regularText);
+				}
 			}
 		}
-		GUILayout.Label("No mobs!", regularText);
 		
         GUILayout.BeginArea (new Rect (Screen.width-120,5,100,300));
 		if(GUILayout.Button(wallTexture, GUILayout.Width(35),GUILayout.Height(35)))

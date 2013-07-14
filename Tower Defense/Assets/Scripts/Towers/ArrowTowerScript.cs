@@ -6,8 +6,8 @@ public class ArrowTowerScript : TowerBaseScript {
 	// Use this for initialization
 	protected override void Start () {
 		base.Start();
-		fireRate = 1f;
-		damage = 1f;
+		fireRate = 0.2f;
+		damage = 2f;
 	}
 	
 	// Update is called once per frame
@@ -16,7 +16,6 @@ public class ArrowTowerScript : TowerBaseScript {
 	}
 	
 	protected override void PopulateRangeWithTiles(){
-		Debug.Log ("WHAT THE HELL");
 		float x = this.transform.position.x;
 		float y = this.transform.position.y;
 		GameObject tile1 = levelScript.GetTile(x,y+1);

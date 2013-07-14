@@ -23,7 +23,7 @@ public class LevelScript : MonoBehaviour {
 	
 	//Spawner
 	public bool spawning;
-	public float spawnRate = 1f;
+	public float spawnRate;
 	public float spawnStart = 0f;
 	public float spawnTimes = 0f;
 	public int spawnIndex;
@@ -66,6 +66,7 @@ public class LevelScript : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+		spawnRate = 0.2f;
 		cursorObject = Wall;
 		startPoint = Random.Range(-(mapWidth/2-2), mapWidth/2-2);
 		endPoint = Random.Range(-(mapWidth/2-2), mapWidth/2-2);
@@ -92,7 +93,6 @@ public class LevelScript : MonoBehaviour {
 			SpawnObjectTimes(spawnObject, spawnTimes);
 		}else{
 			spawning = false;
-			Debug.Log("End of Queue!");
 		}
 	}
 	
@@ -101,8 +101,8 @@ public class LevelScript : MonoBehaviour {
 	}
 	
 	public void SpawnInstantiate(){
-        if (spawnStart + spawnTimes + 0.99f < Time.time){
-            CancelInvoke();
+        if (spawnStart + spawnTimes * spawnRate + spawnRate-0.01f < Time.time){
+            CancelInvoke("SpawnInstantiate");
 			SpawnNext();
 		}
 		else

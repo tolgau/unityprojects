@@ -8,7 +8,7 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 	protected LevelScript levelScript;
 	protected float speed=0.1f;
 	protected float placementError = 0.001f;
-	protected float hitPoints;
+	public float hitPoints;
 	protected int pathCount;
 	protected Material defaultMaterial;
 	public Material blinkMaterial;
@@ -81,6 +81,7 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 			DestroyEnemy();
 		else
 			Blink();
+			Debug.Log("Damage");
 			hitPoints = hitPoints - damage;
 	}
 	

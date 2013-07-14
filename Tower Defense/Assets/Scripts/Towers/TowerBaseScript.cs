@@ -7,11 +7,15 @@ public abstract class TowerBaseScript : MonoBehaviour {
 	protected List<GameObject> combinedList = new List<GameObject>();
 	protected LevelScript levelScript;
 	protected GameObject target;
+	protected Material defaultMaterial;
+	public Material blinkMaterial;
 	protected float fireRate;
 	protected float damage;
+	protected float lastFireStarted;
 	
 	// Use this for initialization
 	protected virtual void Start () {
+		defaultMaterial = this.renderer.material;
 		target = null;
 		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
 		PopulateRangeWithTiles();
@@ -39,30 +43,41 @@ public abstract class TowerBaseScript : MonoBehaviour {
 		if(target == null){
 			if(combinedList.Count > 0){
 				target = combinedList[0];
-				StartFire();
+				if(Time.time > lastFireStarted + fireRate)
+					StartFire();
 			}
 		}else{
 			if(combinedList.IndexOf(target) == -1){
 				target = null;
+				StopFire();
 			}
 		}
+	}
+	
+	void Blink(){
+		this.renderer.material = blinkMaterial;
+		Invoke("ChangeColor", 0.05f);
+	}
+	
+	void ChangeColor(){
+		this.renderer.material = defaultMaterial;
 	}
 	
 	protected virtual void Damage(){
 		if(target != null){
 			EnemyBaseScript enemyScript = target.GetComponent<EnemyBaseScript>();
 			enemyScript.Damage(damage);
+			Blink();
 		}
-		else
-			StopFire();
 	}
 	
 	protected virtual void StartFire(){
-		InvokeRepeating("Damage", 0f, fireRate);
+		lastFireStarted = Time.time;
+		InvokeRepeating("Damage", 0.001f, fireRate);
 	}
 
 	protected virtual void StopFire(){
-		CancelInvoke();
+		CancelInvoke("Damage");
 	}
 	
 }
