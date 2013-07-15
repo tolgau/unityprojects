@@ -81,7 +81,6 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 			DestroyEnemy();
 		else
 			Blink();
-			Debug.Log("Damage");
 			hitPoints = hitPoints - damage;
 	}
 	

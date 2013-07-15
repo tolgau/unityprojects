@@ -66,7 +66,7 @@ public class LevelScript : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		spawnRate = 0.2f;
+		spawnRate = 0.5f;
 		cursorObject = Wall;
 		startPoint = Random.Range(-(mapWidth/2-2), mapWidth/2-2);
 		endPoint = Random.Range(-(mapWidth/2-2), mapWidth/2-2);
@@ -74,7 +74,7 @@ public class LevelScript : MonoBehaviour {
 		GameObject pathFinder = (GameObject)Instantiate(PathFinder);
 		pathFinderScript = pathFinder.GetComponent<PathFinderScript>();
 		Instantiate(Debugger);
-		spawnQueue.Add(new SpawnData(Frog, 3f));
+		spawnQueue.Add(new SpawnData(Frog, 10f));
 		spawnQueue.Add(new SpawnData(Frog, 2f));
 		spawning = false;
 	}

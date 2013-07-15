@@ -6,7 +6,7 @@ public class ArrowTowerScript : TowerBaseScript {
 	// Use this for initialization
 	protected override void Start () {
 		base.Start();
-		fireRate = 0.2f;
+		fireRate = 0.5f;
 		damage = 2f;
 	}
 	
