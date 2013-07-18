@@ -8,9 +8,11 @@ public class HealthBarScript : MonoBehaviour {
 
 	protected Texture2D background;
 	protected Texture2D foreground;
+	protected Vector3 screenPosition;
 
 	// Use this for initialization
 	void Start () {
+		curHealth = this.GetComponent<EnemyBaseScript>().hitPoints;
 		maxHealth = this.GetComponent<EnemyBaseScript>().hitPoints;
 		
 		background = new Texture2D(1, 1, TextureFormat.RGB24, false);
@@ -24,16 +26,16 @@ public class HealthBarScript : MonoBehaviour {
 	}
 	
 	void OnGUI() {
-
-		Vector3 screenPosition = Camera.current.WorldToScreenPoint(transform.position); // gets screen position.
-		screenPosition.y = Screen.height - (screenPosition.y + 1); // inverts y
-
-		GUI.DrawTexture(new Rect(screenPosition.x-19/2, screenPosition.y-8, 19, 4),background);
-		GUI.DrawTexture(new Rect(screenPosition.x-19/2, screenPosition.y-8, curHealth/maxHealth*19, 4),foreground);
+		if(maxHealth != 0){
+			GUI.DrawTexture(new Rect(screenPosition.x-11, screenPosition.y-16, 25, 4),background);
+			GUI.DrawTexture(new Rect(screenPosition.x-11, screenPosition.y-16, curHealth/maxHealth*25, 4),foreground);
+		}
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
+		screenPosition = Camera.mainCamera.WorldToScreenPoint(transform.position); // gets screen position.
+		screenPosition.y = Screen.height - (screenPosition.y + 1); // inverts y
 		curHealth = this.GetComponent<EnemyBaseScript>().hitPoints;
 	}
 }

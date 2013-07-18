@@ -49,6 +49,14 @@ public class LevelScript : MonoBehaviour {
 		tileMap.Add(tile);
 	}
 	
+	public void ChangeSpeed(float speed){
+		Time.timeScale = speed;		
+	}
+	
+	public float GetSpeed(){
+		return Time.timeScale;
+	}
+	
 	//Return the tile object instance at the specified horizontal and vertical values
 	public GameObject GetTile(float mapHor, float mapVer){
 		GameObject result=null;

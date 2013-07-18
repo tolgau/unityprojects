@@ -6,15 +6,20 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 	
 	protected PathFinderScript pathFinderScript;
 	protected LevelScript levelScript;
-	protected float speed=0.1f;
-	protected float placementError = 0.001f;
-	public float hitPoints;
+	protected float speed;
+	protected float curSpeed;
+	public float hitPoints = 1;
 	protected int pathCount;
 	protected Material defaultMaterial;
 	public Material blinkMaterial;
 	protected GameObject currentTile, nextTile, previousTile;
 	protected List<PathNode> path;
 	// Use this for initialization
+	
+	protected virtual void Awake(){
+		curSpeed = 0.1f * Time.timeScale;
+	}
+	
 	protected virtual void Start ()
 	{
 		defaultMaterial = this.renderer.material;
@@ -28,7 +33,7 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 		RegisterOccupant(currentTile);
 	}
 	
-	protected virtual float[] GetRoundedLocation() {
+	public virtual float[] GetRoundedLocation() {
 		//Get frog coordinates and round them. Send integer values although the method expects float
 		float tempHorizontal = Mathf.Round (transform.position.x);
 		float tempVertical = Mathf.Round (transform.position.y);
@@ -63,7 +68,7 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 	
 	protected virtual void Move(){
 
-		if (Mathf.Abs(this.transform.position.x - nextTile.transform.position.x) < speed && Mathf.Abs(this.transform.position.y - nextTile.transform.position.y) < speed){
+		if (Mathf.Abs(this.transform.position.x - nextTile.transform.position.x) < curSpeed && Mathf.Abs(this.transform.position.y - nextTile.transform.position.y) < curSpeed){
 			previousTile = nextTile;
 			
 			GetNextTile();
@@ -73,15 +78,16 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 			}
 		}
 		
-		transform.Translate((previousTile.transform.position.x-nextTile.transform.position.x)*speed,(previousTile.transform.position.y-nextTile.transform.position.y)*speed,0);
+		transform.Translate((previousTile.transform.position.x-nextTile.transform.position.x)*curSpeed,(previousTile.transform.position.y-nextTile.transform.position.y)*curSpeed,0);
 			
 	}
 	public void Damage(float damage){
 		if(hitPoints <= damage)
 			DestroyEnemy();
-		else
+		else{
 			Blink();
 			hitPoints = hitPoints - damage;
+		}
 	}
 	
 	void Blink(){
@@ -105,6 +111,7 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 	// Update is called once per frame
 	protected virtual void Update ()
 	{
+		curSpeed = speed * Time.timeScale;
 		Move ();
 		MonitorTileChange();
 	}

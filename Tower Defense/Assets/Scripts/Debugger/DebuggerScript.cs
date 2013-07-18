@@ -11,6 +11,7 @@ public class DebuggerScript : MonoBehaviour {
 	public GameObject DebuggerTile;
 	public Texture wallTexture;
 	public Texture towerTexture;
+	public float defTimeScale;
 
 	void OnGUI () {
 		GUILayout.Label("Tile/Node Info:", titleText);
@@ -51,7 +52,7 @@ public class DebuggerScript : MonoBehaviour {
 			}
 		}
 		
-        GUILayout.BeginArea (new Rect (Screen.width-120,5,100,300));
+        GUILayout.BeginArea (new Rect (Screen.width-120,5,100,600));
 		if(GUILayout.Button(wallTexture, GUILayout.Width(35),GUILayout.Height(35)))
 			levelScript.cursorObject = levelScript.Wall;
 		if(GUILayout.Button(towerTexture, GUILayout.Width(35),GUILayout.Height(35)))
@@ -63,6 +64,22 @@ public class DebuggerScript : MonoBehaviour {
 			else
 				Debug.Log("Current level still in progress!");
 		}
+		
+		if(GUILayout.Button("Pause/Resume")){
+			Debug.Log(Time.timeScale);
+			if(levelScript.GetSpeed() != 0)
+				levelScript.ChangeSpeed(0);
+			else
+				levelScript.ChangeSpeed(defTimeScale);
+		}
+		
+		if(GUILayout.Button("Fast/Slow")){
+			if(levelScript.GetSpeed() == defTimeScale)
+				levelScript.ChangeSpeed(defTimeScale*2);
+			else
+				levelScript.ChangeSpeed(defTimeScale);
+		}
+		
 		if(GUILayout.Button("Quit"))
 			Application.Quit();
 		GUILayout.EndArea ();		
@@ -75,6 +92,7 @@ public class DebuggerScript : MonoBehaviour {
 		
 	}
 	void Start(){
+		defTimeScale = Time.timeScale;
 		InstantiateDebuggerTile();
 		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
 		pathFinderScript = levelScript.pathFinderScript;
