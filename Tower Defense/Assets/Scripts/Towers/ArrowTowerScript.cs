@@ -20,7 +20,7 @@ public class ArrowTowerScript : TowerBaseScript {
 	protected override void Damage (TileScript tileScript)
 	{
 		base.Damage (tileScript);
-		tileScript.DamageAdjacent(damage,areaDamage,1,true);
+		tileScript.DamageAdjacent(damage,areaDamage,0,true);
 	}
 	
 	protected override void PopulateRangeWithTiles(){

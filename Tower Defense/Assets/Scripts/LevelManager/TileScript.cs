@@ -80,43 +80,34 @@ public class TileScript : MonoBehaviour {
 		List<GameObject> tileList = new List<GameObject>();
 		List<GameObject> enemies = new List<GameObject>();
 		TileScript baseTileScr = null;
+		
 		if(boxed){
-			GameObject tile1 = levelScript.GetTile(locx-1,locy+1);
-			GameObject tile2 = levelScript.GetTile(locx,locy+1);
-			GameObject tile3 = levelScript.GetTile(locx+1,locy+1);
-			GameObject tile4 = levelScript.GetTile(locx-1,locy);
-			GameObject tile5 = levelScript.GetTile(locx+1,locy);
-			GameObject tile6 = levelScript.GetTile(locx-1,locy-1);
-			GameObject tile7 = levelScript.GetTile(locx,locy-1);
-			GameObject tile8 = levelScript.GetTile(locx+1,locy-1);
-			GameObject tile9 = this.gameObject;
-			baseTileScr = tile9.GetComponent<TileScript>();
-			tileList.Add(tile1);
-			tileList.Add(tile2);
-			tileList.Add(tile3);
-			tileList.Add(tile4);
-			tileList.Add(tile5);
-			tileList.Add(tile6);
-			tileList.Add(tile7);
-			tileList.Add(tile8);
+			for (int x=-sideLength; x<=sideLength; x++) {
+				for (int y=-sideLength; y<=sideLength; y++) {
+					if (x==0 && y==0)
+						baseTileScr = this;
+					else {
+						if (levelScript.GetTile(locx+x,locy+y).GetComponent<TileScript>().IsOnPath())
+							tileList.Add (levelScript.GetTile(locx+x,locy+y));
+					}
+				}
+			}
 		}else{
-			GameObject tile2 = levelScript.GetTile(locx,locy+1);
-			GameObject tile4 = levelScript.GetTile(locx-1,locy);
-			GameObject tile5 = levelScript.GetTile(locx+1,locy);
-			GameObject tile7 = levelScript.GetTile(locx,locy-1);
-			GameObject tile9 = this.gameObject;
-			baseTileScr = tile9.GetComponent<TileScript>();
-			tileList.Add(tile2);
-			tileList.Add(tile4);
-			tileList.Add(tile5);
-			tileList.Add(tile7);
+			for (int x=-sideLength; x<=sideLength; x++) {
+				for (int y=-sideLength; y<=sideLength; y++) {
+					if (x==0 && y==0)
+						baseTileScr = this;
+					else if (y<=sideLength-Mathf.Abs(x) && y>=Mathf.Abs(x)-sideLength) {
+						if (levelScript.GetTile(locx+x,locy+y).GetComponent<TileScript>().IsOnPath())
+							tileList.Add (levelScript.GetTile(locx+x,locy+y));
+					}
+				}
+			}
 		}
 		
 		List<GameObject> baseTileOccupants = new List<GameObject>();
 			baseTileOccupants.AddRange(baseTileScr.tileOccupants);
 		
-		
-		//TODO: implement the fucking loop including sidelength.
 		foreach(GameObject tile in tileList){
 			if(tile != null){
 				TileScript tempScr = tile.GetComponent<TileScript>();

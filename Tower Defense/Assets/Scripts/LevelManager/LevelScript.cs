@@ -75,7 +75,7 @@ public class LevelScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		spawnRate = 0.5f;
-		cursorObject = Wall;
+		cursorObject = ArrowTower;
 		startPoint = Random.Range(-(mapWidth/2-2), mapWidth/2-2);
 		endPoint = Random.Range(-(mapWidth/2-2), mapWidth/2-2);
 		BuildMap(mapWidth/2,mapHeight/2);
