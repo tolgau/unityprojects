@@ -7,7 +7,9 @@ public class PathFinderScript : MonoBehaviour {
 	private List<PathNode> closedList = new List<PathNode>();
 	private List<PathNode> openList = new List<PathNode>();
 	private List<PathNode> allNodes = new List<PathNode>();
+	private List<GameObject> displayTiles = new List<GameObject>();
 	public List<PathNode> enemyPath = new List<PathNode>();
+	public GameObject pathTile;
 	public Material blue;
 	public Material red;
 	public Material green;
@@ -61,6 +63,18 @@ public class PathFinderScript : MonoBehaviour {
 		end.nodePosition.z = 0f;
 		InitiatePathFinder();
 		FindShortestPathAStar(start, end);
+		DisplayPath();
+	}
+	
+	void DisplayPath(){
+		foreach(GameObject tile in displayTiles){
+			Destroy(tile);
+		}
+		foreach(PathNode node in enemyPath){
+			Vector3 nodePosIncY = node.nodePosition;
+			nodePosIncY.z -= 0.5f;
+			displayTiles.Add((GameObject)Instantiate(pathTile,nodePosIncY,Quaternion.Euler(0,0,0))) ;
+		}
 	}
 	
 	/*
@@ -138,7 +152,7 @@ public class PathFinderScript : MonoBehaviour {
 		PathNode activeNode;
 		
 		// Add target node to enemyPath
-		enemyPath.Add (end);
+		//enemyPath.Add (end);
 		
 		// Add start node to openList and calculate its costs
 		openList.Add (start);
