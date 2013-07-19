@@ -18,6 +18,7 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 	
 	protected virtual void Awake(){
 		curSpeed = 0.1f * Time.timeScale;
+		this.gameObject.AddComponent("HealthBarScript");
 	}
 	
 	protected virtual void Start ()
@@ -111,6 +112,8 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 	// Update is called once per frame
 	protected virtual void Update ()
 	{
+		if(currentTile.tag == "Border")
+			DestroyEnemy();
 		curSpeed = speed * Time.timeScale;
 		Move ();
 		MonitorTileChange();

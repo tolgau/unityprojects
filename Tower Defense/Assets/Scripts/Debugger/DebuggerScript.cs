@@ -86,7 +86,7 @@ public class DebuggerScript : MonoBehaviour {
 	}
 	
 	public void InstantiateDebuggerTile(){
-		Instantiate(DebuggerTile,new Vector3(0,0,0),Quaternion.Euler(-90,0,0));
+		Instantiate(DebuggerTile,new Vector3(0,0,0),Quaternion.Euler(0,0,0));
 	}
 	void Update(){
 		

@@ -40,7 +40,7 @@ public class LevelScript : MonoBehaviour {
 	public GameObject cursorObject;
 	//Generic list the tiles and walls are held in
 	private List<GameObject> tileMap = new List<GameObject>();
-	private Quaternion rotation = Quaternion.Euler(-90,0,0);
+	private Quaternion rotation = Quaternion.Euler(0,0,0);
 	public int startPoint;
 	public int endPoint;
 	
