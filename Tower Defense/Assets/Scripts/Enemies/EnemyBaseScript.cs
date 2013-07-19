@@ -10,8 +10,6 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 	protected float curSpeed;
 	public float hitPoints = 1;
 	protected int pathCount;
-	protected Material defaultMaterial;
-	public Material blinkMaterial;
 	protected GameObject currentTile, nextTile, previousTile;
 	protected List<PathNode> path;
 	// Use this for initialization
@@ -23,7 +21,6 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 	
 	protected virtual void Start ()
 	{
-		defaultMaterial = this.renderer.material;
 		//Get LevelScript instance
 		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
 		pathFinderScript = GameObject.Find("PathFinder(Clone)").GetComponent<PathFinderScript>();
@@ -86,18 +83,8 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 		if(hitPoints <= damage)
 			DestroyEnemy();
 		else{
-			Blink();
 			hitPoints = hitPoints - damage;
 		}
-	}
-	
-	void Blink(){
-		this.renderer.material = blinkMaterial;
-		Invoke("ChangeColor", 0.05f);
-	}
-	
-	void ChangeColor(){
-		this.renderer.material = defaultMaterial;
 	}
 	
 	protected virtual bool MonitorTileChange(){

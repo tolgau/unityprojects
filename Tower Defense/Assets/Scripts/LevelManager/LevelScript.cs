@@ -67,11 +67,7 @@ public class LevelScript : MonoBehaviour {
 		}
 		return result;
 	}
-	
-	public void ChangeTileMaterial(GameObject tile, Material material){
-		tile.renderer.material = material;		
-	}
-	
+
 	// Use this for initialization
 	void Start () {
 		spawnRate = 0.5f;

@@ -4,8 +4,6 @@ using System.Collections.Generic;
 
 public class TileScript : MonoBehaviour {
 	public Material yellow; //Debug
-	protected Material current; //Debug
-	protected Material defaultMaterial; //Debug
 	protected PathFinderScript pathFinderScript;
 	protected LevelScript levelScript;
 	protected float locx;
@@ -14,13 +12,8 @@ public class TileScript : MonoBehaviour {
 	public List<GameObject> tileOccupants = new List<GameObject>();
 
 	public void RegisterTileOccupant(GameObject gameObject){
-		int occupantCountBefore = tileOccupants.Count;
 		//Add tile to the list
 		tileOccupants.Add(gameObject);
-		if (occupantCountBefore == 0){
-			current = this.renderer.material; //Debug
-			levelScript.ChangeTileMaterial(this.gameObject, yellow); //Debug
-		}
 	}
 	
 	public void RegisterObject(GameObject gameObject){
@@ -131,31 +124,15 @@ public class TileScript : MonoBehaviour {
 		
 	}
 	
-	
-	public void SetDefaultMaterial(Material material){
-		defaultMaterial = material;
-		current = material;
-	}
-	
 	public void DeregisterTileOccupant(GameObject gameObject){
 		//Add tile to the list
 		tileOccupants.Remove(gameObject);
-		int occupantCountAfter = tileOccupants.Count;
-		if (occupantCountAfter == 0){
-			levelScript.ChangeTileMaterial(this.gameObject, current); //Debug
-		}
-	}
-	
-	public void RevertMaterialToPrefab(){
-		this.gameObject.renderer.material = defaultMaterial;
 	}
 	
 	// Use this for initialization
 	protected virtual void Start () {
 		locx = this.transform.position.x;
 		locy = this.transform.position.y;
-		current = this.renderer.material;
-		defaultMaterial = this.renderer.material;
 		//Get LevelScript instance
 		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
 		//Put the tile in generic list

@@ -61,9 +61,6 @@ public class PathFinderScript : MonoBehaviour {
 		end.nodePosition.z = 0f;
 		InitiatePathFinder();
 		FindShortestPathAStar(start, end);
-		//PaintList(closedList, red);
-		//PaintList(openList, blue);
-		PaintList(enemyPath, green);
 	}
 	
 	/*
@@ -278,41 +275,10 @@ public class PathFinderScript : MonoBehaviour {
 		returnTile = levelScript.GetTile(horizontal, vertical);
 		return returnTile;		
 	}
-	
-	void PaintNode(PathNode node, Material color){
-		GameObject tile = FindTileByNode(node);
-		levelScript.ChangeTileMaterial(tile, color);
-	}
-	
+		
 	void InitiatePathFinder(){
-		ResetListTilesToPrefab();
 		closedList.Clear();
 		openList.Clear();
 		enemyPath.Clear();
 	}
-	
-	void ResetListTilesToPrefab(){
-		foreach (PathNode node in openList) {
-			GameObject tile = FindTileByNode(node);
-			TileScript tempTileScript = tile.GetComponent<TileScript>();
-			tempTileScript.RevertMaterialToPrefab();
-		}
-		foreach (PathNode node in closedList) {
-			GameObject tile = FindTileByNode(node);
-			TileScript tempTileScript = tile.GetComponent<TileScript>();
-			tempTileScript.RevertMaterialToPrefab();
-		}
-		foreach (PathNode node in enemyPath) {
-			GameObject tile = FindTileByNode(node);
-			TileScript tempTileScript = tile.GetComponent<TileScript>();
-			tempTileScript.RevertMaterialToPrefab();
-		}
-		
-	}
-	
-	void PaintList(List<PathNode> list, Material color){
-		foreach (PathNode node in list) {
-			PaintNode (node, color);
-		}
-	}	
 }

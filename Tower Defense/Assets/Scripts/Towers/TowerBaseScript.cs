@@ -7,8 +7,6 @@ public abstract class TowerBaseScript : MonoBehaviour {
 	protected List<GameObject> combinedList = new List<GameObject>();
 	protected LevelScript levelScript;
 	protected GameObject target;
-	protected Material defaultMaterial;
-	public Material blinkMaterial;
 	protected float fireRate;
 	protected float damage;
 	protected float areaDamage;
@@ -18,7 +16,6 @@ public abstract class TowerBaseScript : MonoBehaviour {
 	
 	// Use this for initialization
 	protected virtual void Start () {
-		defaultMaterial = this.renderer.material;
 		target = null;
 		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
 		PopulateRangeWithTiles();
@@ -57,15 +54,6 @@ public abstract class TowerBaseScript : MonoBehaviour {
 		}
 	}
 	
-	void Blink(){
-		this.renderer.material = blinkMaterial;
-		Invoke("ChangeColor", 0.05f);
-	}
-	
-	void ChangeColor(){
-		this.renderer.material = defaultMaterial;
-	}
-	
 	protected virtual void Launch(){
 		if(target != null){
 			EnemyBaseScript enemyScript = target.GetComponent<EnemyBaseScript>();
@@ -74,7 +62,6 @@ public abstract class TowerBaseScript : MonoBehaviour {
 			TileScript tileScript = tile.GetComponent<TileScript>();
 			lastFireStarted = Time.time;
 			StartCoroutine(DamageRoutine(tileScript, damage, projectileSpeed));
-			Blink();
 		}
 	}
 	
