@@ -134,7 +134,7 @@ public class TileScript : MonoBehaviour {
 		locx = this.transform.position.x;
 		locy = this.transform.position.y;
 		//Get LevelScript instance
-		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
+		levelScript = GameObject.Find("LevelManager(Clone)").GetComponent<LevelScript>();
 		//Put the tile in generic list
 		pathFinderScript = GameObject.Find("PathFinder(Clone)").GetComponent<PathFinderScript>();
 		levelScript.RegisterTile(this.gameObject);

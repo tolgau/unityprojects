@@ -15,7 +15,7 @@ public class PathFinderScript : MonoBehaviour {
 	public Material green;
 	// Use this for initialization
 	void Start () {
-		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
+		levelScript = GameObject.Find("LevelManager(Clone)").GetComponent<LevelScript>();
 		//PrintNodeList();	
 		FindShortestPathBetweenGates();
 	}

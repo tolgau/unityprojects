@@ -94,7 +94,7 @@ public class DebuggerScript : MonoBehaviour {
 	void Start(){
 		defTimeScale = Time.timeScale;
 		InstantiateDebuggerTile();
-		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
+		levelScript = GameObject.Find("LevelManager(Clone)").GetComponent<LevelScript>();
 		pathFinderScript = levelScript.pathFinderScript;
 	}
 }

@@ -6,7 +6,7 @@ public class DebuggerTileScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
+		levelScript = GameObject.Find("LevelManager(Clone)").GetComponent<LevelScript>();
 	}
 	
 	// Update is called once per frame

@@ -17,7 +17,7 @@ public abstract class TowerBaseScript : MonoBehaviour {
 	// Use this for initialization
 	protected virtual void Start () {
 		target = null;
-		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
+		levelScript = GameObject.Find("LevelManager(Clone)").GetComponent<LevelScript>();
 		PopulateRangeWithTiles();
 		AddListsTogether();
 	}

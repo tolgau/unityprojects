@@ -22,7 +22,7 @@ public abstract class EnemyBaseScript : MonoBehaviour {
 	protected virtual void Start ()
 	{
 		//Get LevelScript instance
-		levelScript = GameObject.Find("LevelManager").GetComponent<LevelScript>();
+		levelScript = GameObject.Find("LevelManager(Clone)").GetComponent<LevelScript>();
 		pathFinderScript = GameObject.Find("PathFinder(Clone)").GetComponent<PathFinderScript>();
 		path = pathFinderScript.GetPath();
 		nextTile = levelScript.GetTile(path[path.Count-1].nodePosition.x, path[path.Count-1].nodePosition.y);
