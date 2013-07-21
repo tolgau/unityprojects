@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 3d3fe2f658fc2fd43996591f4919219a
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - ArrowTower: {instanceID: 0}
+  - Wall: {instanceID: 0}
+  - Frog: {fileID: 100000, guid: ba35c1790e103994089d9a2c9cd578c5, type: 2}
+  - Tile: {fileID: 100000, guid: 846134c4d16f9dc4eac051fcf9b75c63, type: 2}
+  - Border: {instanceID: 0}
+  - GateEnter: {instanceID: 0}
+  - GateExit: {instanceID: 0}
+  - PathFinder: {instanceID: 0}
+  - Debugger: {instanceID: 0}
+  - spawnObject: {instanceID: 0}
+  - wallMat: {instanceID: 0}
+  - tileMat: {instanceID: 0}
+  - pathFinderScript: {instanceID: 0}
+  - tileUnderMouse: {instanceID: 0}
+  - cursorObject: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
