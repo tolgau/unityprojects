@@ -72,7 +72,7 @@ public class PathFinderScript : MonoBehaviour {
 		}
 		foreach(PathNode node in enemyPath){
 			Vector3 nodePosIncY = node.nodePosition;
-			nodePosIncY.z -= 0.5f;
+			nodePosIncY.z -= 0.1f;
 			displayTiles.Add((GameObject)Instantiate(pathTile,nodePosIncY,Quaternion.Euler(0,0,0))) ;
 		}
 	}

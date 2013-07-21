@@ -135,13 +135,13 @@ public class LevelScript : MonoBehaviour {
 				positionVector = new Vector3(x,y,0);
 				gatePositionVector = new Vector3(x,y,-1.1f);
 				if (x==mapHor) {
-					DrawTiles(Border, positionVector);
+					DrawTiles(Border, gatePositionVector);
 				} else if (x==-mapHor) {
-					DrawTiles(Border, positionVector);
+					DrawTiles(Border, gatePositionVector);
 				} else if (y==mapVer && (x<startPoint || x>startPoint)) {
-					DrawTiles(Border, positionVector);
+					DrawTiles(Border, gatePositionVector);
 				} else if (y==-mapVer && (x<endPoint || x>endPoint)) {
-					DrawTiles(Border, positionVector);
+					DrawTiles(Border, gatePositionVector);
 				} else if (y==mapVer && (x == startPoint)){
 					DrawTiles(GateEnter, gatePositionVector);
 				} else if (y==-mapVer && (x == endPoint)) {

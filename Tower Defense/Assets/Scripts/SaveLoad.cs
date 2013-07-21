@@ -26,11 +26,13 @@ public class SaveLoad: MonoBehaviour {
    // When the EGO is instansiated the Start will trigger 
    // so we setup our initial values for our local members 
    void Start () { 
+	
+	  _Player = GameObject.FindGameObjectWithTag("MainCamera");
       // We setup our rectangles for our messages 
-      _Save=new Rect(10,80,100,20); 
-      _Load=new Rect(10,100,100,20); 
-      _SaveMSG=new Rect(10,120,400,40); 
-      _LoadMSG=new Rect(10,140,400,40); 
+      _Save=new Rect(Screen.width-120,267,100,20); 
+      _Load=new Rect(Screen.width-120,290,100,20); 
+      _SaveMSG=new Rect(Screen.width-120,293,400,40); 
+      _LoadMSG=new Rect(Screen.width-120,316,400,40); 
  
       // Where we want to save and load to and from 
       _FileLocation=Application.dataPath; 
@@ -122,7 +124,7 @@ public class SaveLoad: MonoBehaviour {
       XmlSerializer xs = new XmlSerializer(typeof(UserData)); 
       MemoryStream memoryStream = new MemoryStream(StringToUTF8ByteArray(pXmlizedString)); 
       XmlTextWriter xmlTextWriter = new XmlTextWriter(memoryStream, Encoding.UTF8); 
-      return xs.Deserialize(memoryStream); 
+      return xs.Deserialize(xmlTextWriter.BaseStream); 
    } 
  
    // Finally our save and load methods for the file itself 
