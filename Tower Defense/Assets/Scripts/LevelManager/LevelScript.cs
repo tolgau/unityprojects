@@ -83,6 +83,10 @@ public class LevelScript : MonoBehaviour {
 		spawning = false;
 	}
 	
+	public void BuildMapUsingLevelData(LevelData levelData){
+		//TODO: Build Map according to LevelData
+	}
+	
 	public void StartLevel(){
 		spawnIndex = -1;
 		SpawnNext();
