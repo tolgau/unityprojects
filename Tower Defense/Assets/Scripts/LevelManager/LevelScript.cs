@@ -30,7 +30,7 @@ public class LevelScript : MonoBehaviour {
 	public GameObject spawnObject;
 	public List<SpawnData> spawnQueue = new List<SpawnData>();
 	//END: Spawner
-	
+
 	public Material wallMat;
 	public Material tileMat;
 	public int mapWidth;
@@ -78,15 +78,15 @@ public class LevelScript : MonoBehaviour {
 		GameObject pathFinder = (GameObject)Instantiate(PathFinder);
 		pathFinderScript = pathFinder.GetComponent<PathFinderScript>();
 		Instantiate(Debugger);
-		spawnQueue.Add(new SpawnData(Frog, 10f));
-		spawnQueue.Add(new SpawnData(Frog, 2f));
+		spawnQueue.Add(new SpawnData(Frog, 1f));
+		//spawnQueue.Add(new SpawnData(Frog, 2f));
 		spawning = false;
 	}
 	
 	public void BuildMapUsingLevelData(LevelData levelData){
 		//TODO: Build Map according to LevelData
 	}
-	
+		
 	public void StartLevel(){
 		spawnIndex = -1;
 		SpawnNext();

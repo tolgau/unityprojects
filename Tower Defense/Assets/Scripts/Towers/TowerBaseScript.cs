@@ -13,7 +13,7 @@ public abstract class TowerBaseScript : MonoBehaviour {
 	protected float projectileSpeed;
 	protected float lastFireStarted;
 	protected bool firing;
-	
+		
 	// Use this for initialization
 	protected virtual void Start () {
 		target = null;
@@ -44,11 +44,13 @@ public abstract class TowerBaseScript : MonoBehaviour {
 		if(target == null){
 			if(combinedList.Count > 0){
 				target = combinedList[0];
+				Debug.Log("Routine Started!");
 				StartCoroutine("StartFire");
 			}
 		}else{
 			if(combinedList.IndexOf(target) == -1){
 				target = null;
+				Debug.Log("Routine Stopped!");
 				StopCoroutine("StartFire");
 			}
 		}
@@ -84,7 +86,10 @@ public abstract class TowerBaseScript : MonoBehaviour {
 				yield return new WaitForSeconds((lastFireStarted + fireRate) - Time.time);
 			Launch();
 			yield return new WaitForSeconds(fireRate);
-			
+			if(target == null){
+				Debug.Log("Routine Stopped!");				
+				yield break;
+			}
 		}
 	}
 }
