@@ -34,7 +34,7 @@ public class HealthBarScript : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		screenPosition = Camera.mainCamera.WorldToScreenPoint(transform.position); // gets screen position.
+		screenPosition = Camera.main.WorldToScreenPoint(transform.position); // gets screen position.
 		screenPosition.y = Screen.height - (screenPosition.y + 1); // inverts y
 		curHealth = this.GetComponent<EnemyBaseScript>().hitPoints;
 	}
